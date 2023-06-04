@@ -2,12 +2,9 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
-import MuiAccordionSummary, {
-  AccordionSummaryProps,
-} from '@mui/material/AccordionSummary';
+import MuiAccordionSummary, { AccordionSummaryProps } from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -45,81 +42,43 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   borderTop: '1px solid rgba(0, 0, 0, .125)',
 }));
 
-export default function SimpleAccordion() {
-  return (
-    <div>
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <Typography>①チャンネルうううううううううう</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            チャンネルのリスト
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
-
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel2a-content"
-          id="panel2a-header"
-        >
-          <Typography>①DMううううううううううううううううう</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            DMのリスト
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
-
-    </div>
-  );
-}
-
-/*
-function CustomizedAccordions() {
+export default function Accordions() {
   const [expanded, setExpanded] = React.useState<string | false>('panel1');
+  const [expanded2, setExpanded2] = React.useState<string | false>('panel2');
 
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
       setExpanded(newExpanded ? panel : false);
     };
+    const handleChange2 =
+    (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
+      setExpanded2(newExpanded ? panel : false);
+    };
 
   return (
     <div>
+
       <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
-        <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-          <Typography>チャンネル</Typography>
+        <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" sx={{backgroundColor: "#53c3ac"}}>
+          <Typography>Channel</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget. Lorem ipsum dolor
-            sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-            sit amet blandit leo lobortis eget.
+            List
           </Typography>
         </AccordionDetails>
       </Accordion>
-      <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
-        <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
-          <Typography>ダイレクトメッセージ</Typography>
+
+      <Accordion expanded={expanded2 === 'panel2'} onChange={handleChange2('panel2')}>
+        <AccordionSummary aria-controls="panel2d-content" id="panel2d-header" sx={{backgroundColor: "#53c3ac"}}>
+          <Typography>DM</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget. Lorem ipsum dolor
-            sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-            sit amet blandit leo lobortis eget.
+            DM
           </Typography>
         </AccordionDetails>
       </Accordion>
     </div>
   );
 }
-*/

@@ -1,32 +1,24 @@
-import SidebarIcon from "./SidebarIcon";
+import UserInfo from "./UserInfo";
+import ChannelList from "./ChannelList";
 import SidebarList from "./SidebarList";
-import SimpleAccordion from "./Accordion";
-import { Drawer } from '@mui/material'
-import Accordions from "./nAccordion";
-
+//import Accordions from "./Accordion";
+import Logout from "./Logout";
 
 function Sidebar() {
   return (
     <div className="Sidebar">
-      <Drawer
-            sx={{
-                '& ::-webkit-scrollbar': {
-                    display: "none"
-                },
-                '& :hover': {
-                    '::-webkit-scrollbar': {
-                        display: "inline"
-                    }
-                }
-            }}
-            ></Drawer>
-      <SidebarIcon />
-      <SimpleAccordion />
-      <Accordions/>
-      <SidebarList/>
-      
 
-      
+      <UserInfo />
+
+      {/* <Accordions /> */}
+
+      <ChannelList />
+
+      <SidebarList/>
+
+      <Logout />
+
+      <div id="overlay"></div>
     </div>
   );
 }

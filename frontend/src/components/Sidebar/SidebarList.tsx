@@ -1,4 +1,25 @@
-import { SidebarData } from "./SidebarData";
+import ImageIcon from '@mui/icons-material/Image';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+
+const SidebarData = [
+  
+  {
+    title: "チャンネル一覧",
+    icon: <FormatListBulletedIcon />,
+    link: "/channels", //モーダルにすると良いかも
+  },
+  {
+    title: "チャンネル作成",
+    icon: <AddBoxIcon />,
+    link: "/channels/new", //モーダルにすると良いかも
+  },
+  {
+    title: "アイコン変更",
+    icon: <ImageIcon />,
+    link: "/image",
+  },
+];
 
 function SidebarList() {
   return (

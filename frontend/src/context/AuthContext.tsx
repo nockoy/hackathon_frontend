@@ -1,10 +1,9 @@
+
 import { createContext, useState, useContext, useEffect } from 'react';
 import { fireAuth } from './../firebase';
 import { User } from 'firebase/auth';
 
-/*
-const AuthContext = createContext<string>("");
-*/
+
 const AuthContext = createContext<{ user: User | null; loading: boolean; }>({ user: null, loading: true });
 
 export function useAuthContext() {
