@@ -1,3 +1,5 @@
+import { Routes, Route, useParams } from "react-router-dom";
+
 import { Navigate } from 'react-router-dom';
 import { useAuthContext } from '../context/AuthContext';
 import Sidebar from "../components/Sidebar/Sidebar";
@@ -19,7 +21,7 @@ interface Channel {
   updated_at: string;
 }
 
-export default function Mypage() {
+export default function Channel() {
   const { user } = useAuthContext();
   const [userChannels, setUserChannels] = useState<Channel[]>([]);
   const { id } = useContext(UserContext);

@@ -16,6 +16,7 @@
     "@types/node": "^16.18.31",
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.4",
+    "axios": "^1.4.0",
     "dotenv": "^16.0.3",
     "firebase": "^9.22.1",
     "react": "^18.2.0",
