@@ -1,9 +1,8 @@
-import { useContext, useState } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { baseURL } from "../App";
 import { UserContext } from "../context/UserContext";
-
 
 const NewChannel = () => {
   //const [loginuser, setLoginuser] = useContext(UserContext)
@@ -11,17 +10,39 @@ const NewChannel = () => {
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const navigation = useNavigate();
+  const { id, channel } = useContext(UserContext);
+  const [values, setValues] = useState(
+    {
+      message: "",
+      isSubmitted: false
+    }
+  );
 
+  const handleChange = (e: any) => {
+    const target = e.target;
+    // console.log(target);
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    setValues({ ...values, [name]: value });
+  };
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     //setDisable(true);
     if (!name) {
-      alert("Please enter name");
+      alert("Please enter a Channelname");
       return;
     }
     if (name.length > 50) {
-      alert("Please enter a name shorter than 50 characters");
+      alert("Please enter a Channelname shorter than 50 characters");
+      return;
+    }
+    if (!description) {
+      alert("Please enter description");
+      return;
+    }
+    if (description.length > 100) {
+      alert("Please enter description shorter than 100 characters");
       return;
     }
 
@@ -30,8 +51,7 @@ const NewChannel = () => {
         name: name,
         description: description
       });
-
-      navigation('/');
+      navigation("/?channel_id=" + channel);
     } catch (error: any) {
       setError(`Failed to create new channel: ${error.message}`);
     }
@@ -61,9 +81,9 @@ const NewChannel = () => {
             onChange={(event) => setDescription(event.target.value)}
           />
 
-          <button /*disabled={disable}*/>登録する</button>
+          <button onClick={handleSubmit}/*disabled={disable}*/>登録する</button>
           <div>
-            <Link to={'/'}>ホームに戻る</Link>
+            <Link to={"/?channel_id=" + channel}>ホームに戻る</Link>
           </div>
         </form>
       </div>

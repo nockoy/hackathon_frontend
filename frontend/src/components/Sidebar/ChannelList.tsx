@@ -26,11 +26,15 @@ function ChannelList() {
     try {
       const response = await axios.get(baseURL + '/channel/join?user_id=' + id);
       setUserChannels(response.data);
-      console.log(response.data[0]);
+      // console.log(response.data[0]);
     } catch (error) {
       console.log('データ取得の際にエラーが発生しました', error);
     };
   };
+
+  const onClickhandler = (value:any) => {
+    navigate("/?channel_id=" + value.id);
+  }
 
   // const handleChannelClick = (channelId: string) => {
   //   setUser(id, name, icon, channelId);
@@ -44,7 +48,7 @@ function ChannelList() {
             key={key}
             // id={window.location.pathname === value.link ? "active" : ""}
             className="row"
-            onClick={() => navigate("/:" + value.c_id)}
+            onClick={() => onClickhandler(value)}
           >
             <div id="icon"><TagIcon /></div>
             <div id="title">{value.name}</div>

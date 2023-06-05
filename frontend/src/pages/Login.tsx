@@ -31,7 +31,7 @@ const Login = () => {
         setUser(response.data[0].id, response.data[0].name, response.data[0].icon, "");//2の方は[0]をつけるとバグる 
       };
       //console.log("User:", response.data[0]);
-      navigation('/' + channel_id);
+      navigation('/?channel_id=' + channel_id);
     } catch (error: any) {
       console.error(error);
       setError(error.message);

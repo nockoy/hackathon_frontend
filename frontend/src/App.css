@@ -1,53 +1,72 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+.Topbar {
+  height: 55px;
+  display: flex;
+  justify-content: center;
+  background: #350d36;
+  background: white;
+  box-shadow: 0px 0px 8px gray;
+  padding: 0px;
+  overflow: auto;
+}
 
-  .Topbar {
-    height: 55px;
-    display: flex;
-    justify-content: center;
-    background: #350d36;
-    background: white;
-    box-shadow: 0px 0px 8px gray;
-    padding: 0px;
-    overflow: auto;
-  }
+.SendBox {
+  height: 140px;
+  display: flex;
+  justify-content: center;
+  padding: 0px;
+  overflow: auto;
+  box-shadow: 0px 0px 8px gray;
+  border-radius: 10px;
+}
 
-  .SendBox {
-    height: 140px;
-    display: flex;
-    justify-content: center;
-    padding: 0px;
-    overflow: auto;
-    box-shadow: 0px 0px 8px gray;
-    border-radius: 10px;
-  }
+.MessageField {
+  width: 100%;
+  /*background: rgb(217, 238, 234);*/
+}
 
-  .MessageField {
-    width: 100%;
-    /*background: rgb(217, 238, 234);*/
-    box-shadow: 0px 0px 8px gray;
-  }
+.MessageContent {
+  margin: 10px;
+  padding: 10px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0px 0px 8px gray;
+  display: flex;
+}
 
-  .MessageContent {
-    margin: 10px;
-    padding: 10px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0px 0px 8px gray;
-  }
+.SenderIcon {
+  margin-right: 8px;
+}
+
+.SenderInfo {
+  display: flex;
+}
+
+.SenderName {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.Time {
+  font-size: 12px;
+  margin-left: 20px;
+}
+
 
 
 /* コンテナ */
 #GridContainer {
-    height: 100vh;
-    display: grid;
-    grid-template-rows: 55px 55px 1fr 140px;
-    grid-template-columns: 205px 1fr; /*Aの横幅、他のやつの幅は余り*/
-    background: linear-gradient(-225deg, #2CD8D5 0%, #C5C1FF 56%, #FFBAC3 100%);
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 55px 55px 1fr 140px;
+  grid-template-columns: 205px 1fr;
+  /*Aの横幅、他のやつの幅は余り*/
+  /* background: linear-gradient(-225deg, #2CD8D5 0%, #C5C1FF 56%, #FFBAC3 100%); */
 
 }
 
@@ -60,14 +79,15 @@
 #itemA {
   grid-row: 2 / 5;
   grid-column: 1 / 2;
-  /*
-  background: #f88;
+
+  /* background: #f88;
   background: #53c3ac;
-  background: linear-gradient(-225deg, #2CD8D5 0%, #C5C1FF 56%, #FFBAC3 100%);
-  border: ridge;
-  */
+  background: linear-gradient(-225deg, #2CD8D5 0%, #C5C1FF 56%, #FFBAC3 100%); */
+  /* border: ridge; */
+
   overflow: auto;
 }
+
 #itemB {
   grid-row: 2 / 3;
   grid-column: 2 / 3;
@@ -77,6 +97,7 @@
   border: ridge;
   */
 }
+
 #itemC {
   grid-row: 3 / 4;
   grid-column: 2 / 3;
@@ -89,6 +110,7 @@
   */
   overflow: auto;
 }
+
 #itemD {
   grid-row: 4 / 5;
   grid-column: 2 / 3;
@@ -101,156 +123,157 @@
 
 .NotFound {
   align-items: center;
-    justify-content: center;
-    display: flex;
-    flex-grow: 1;
+  justify-content: center;
+  display: flex;
+  flex-grow: 1;
 }
 
 .NotFound .modal {
   align-items: center;
-    max-width: 400px;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    justify-content: center;
-    margin-top: 12px;
-    border-radius: 10px;
-    background-color: white;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  justify-content: center;
+  margin-top: 12px;
+  border-radius: 10px;
+  background-color: white;
 }
 
-  .auth {
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    flex-grow: 1;
-  }
+.auth {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-grow: 1;
+}
 
-  .auth2 {
-    align-items: center;
-    max-width: 400px;
-    background-color: white;
-    padding: 20px;
-    justify-content: center;
-    margin-top: 12px;
-    border-radius: 10px;
-  }
+.auth2 {
+  align-items: center;
+  max-width: 400px;
+  background-color: white;
+  padding: 20px;
+  justify-content: center;
+  margin-top: 12px;
+  border-radius: 10px;
+}
 
-  .auth h1 {
-    text-align: center;
-    margin-top: 10px;
-    margin-bottom: 30px;
-  }
-
-
-  .Password__visual {
-    margin: 10px;
-  }
+.auth h1 {
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
 
 
-  .Sidebar {
-    height: 90vh;
-    width: 200px;
-    margin-left: 5px;
-    /*
-    background: #3f0e40;
+.Password__visual {
+  margin: 10px;
+}
+
+
+.Sidebar {
+  height: 90vh;
+  width: 200px;
+  margin-left: 5px;
+
+  /* background: #3f0e40;
     background: #53c3ac;
-    background: linear-gradient(-225deg, #2CD8D5 0%, #C5C1FF 56%, #FFBAC3 100%);
-    */
-  }
-  
-  .SidebarList {
-    height: auto;
-    padding: 0;
-    width: 100%;
-  }
-  
-  .SidebarList .row {
-    width: 90%;
-    height: 40px;
-    /* background-color: cadetblue; */
-    /* border: 1px solid black; */
-    display: flex;
-    color: #ece7ec;
-    justify-content: center;
-    align-items: center;
-    margin: 10px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 8px gray;
-  }
-  
-  .SidebarList .row:hover {
-    cursor: pointer;
-    background-color: rgb(86, 121, 118);
-  }
-  
-  .SidebarList #active {
-    background-color: #1164a3;
-  }
+    background: linear-gradient(-225deg, #2CD8D5 0%, #C5C1FF 56%, #FFBAC3 100%); */
 
-  .row #icon {
-    flex: 30%;
-    display: grid;
-    place-items: center;
-  }
-  
-  .row #title {
-    flex: 70%;
-  }
-  
-  .SidebarIcon {
-    padding-top: 20px;
-    padding-bottom: 15px;
-    text-align: center;
-  }
-  
-  .SidebarIcon img {
-    width: 100px;
-  }
-  
-  .SidebarIcon p {
-    color: white;
-    font-weight: 600;
-    font-size: 13px;
-  }
+}
 
-  .logoutModal {
-    text-align: center;
-  }
+.SidebarList {
+  height: auto;
+  padding: 0;
+  width: 100%;
+}
 
-  .logoutyes {
-    height: 50px;
-    width: 300px;
-    margin: 20px;
-    border-radius: 30px;
-  }
-  .logoutno {
-    height: 50px;
-    width: 300px;
-    margin: 20px;
-    border-radius: 30px;
-  }
+.SidebarList .row {
+  width: 90%;
+  height: 40px;
+  /* background-color: cadetblue; */
+  /* border: 1px solid black; */
+  display: flex;
+  color: #ece7ec;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 8px gray;
+}
 
-  #overlay2{
-    /*　画面全体を覆う設定　*/
-      position:fixed;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
-      background-color:rgba(0,0,0,0.5);
-    
-      /*　画面の中央に要素を表示させる設定　*/
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    
-    }
+.SidebarList .row:hover {
+  cursor: pointer;
+  background-color: rgb(86, 121, 118);
+}
 
-    #content{
-        z-index:2;
-        height: auto;
-        width:50%;
-        padding: 1em;
-        background:#fff;
-        border-radius: 30px;
-    }
+.SidebarList #active {
+  background-color: #1164a3;
+}
+
+.row #icon {
+  flex: 30%;
+  display: grid;
+  place-items: center;
+}
+
+.row #title {
+  flex: 70%;
+}
+
+.SidebarIcon {
+  padding-top: 20px;
+  padding-bottom: 15px;
+  text-align: center;
+}
+
+.SidebarIcon img {
+  width: 100px;
+}
+
+.SidebarIcon p {
+  color: white;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.logoutModal {
+  text-align: center;
+}
+
+.logoutyes {
+  height: 50px;
+  width: 300px;
+  margin: 20px;
+  border-radius: 30px;
+}
+
+.logoutno {
+  height: 50px;
+  width: 300px;
+  margin: 20px;
+  border-radius: 30px;
+}
+
+#overlay2 {
+  /*　画面全体を覆う設定　*/
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+
+  /*　画面の中央に要素を表示させる設定　*/
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+#content {
+  z-index: 2;
+  height: auto;
+  width: 50%;
+  padding: 1em;
+  background: #fff;
+  border-radius: 30px;
+}
