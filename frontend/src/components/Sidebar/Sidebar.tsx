@@ -10,12 +10,11 @@ function Sidebar() {
 
       <UserInfo />
 
-      {/* <Accordions /> */}
-
       <ChannelList />
+      <br />
 
       <SidebarList/>
-
+      <br />
       <Logout />
 
       <div id="overlay"></div>

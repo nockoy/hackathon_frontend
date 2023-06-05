@@ -3,9 +3,8 @@ import ImageLogo from "./images/image.svg";
 import "./ImageUpload.css";
 import { storage } from "./firebase"
 import { ref, uploadBytesResumable } from "firebase/storage";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import { useContext } from "react";
 import { UserContext } from "./context/UserContext";
 import axios from "axios";
 import { baseURL } from "./App";
@@ -13,7 +12,7 @@ import { baseURL } from "./App";
 const ImageUploader = () => {
   const [loading, setLoading] = useState(false);
   const [isUploaded, setUploaded] = useState(false);
-  const {id} = useContext(UserContext);
+  const {id, channel} = useContext(UserContext);
   
   const OnFileUploadToFirebase = async (e: any) => {
     const file = e.target.files[0];
@@ -53,7 +52,7 @@ const ImageUploader = () => {
 
   if (loading === false && isUploaded === true) {
     setTimeout(() => {
-      window.location.href = "/";
+      window.location.href = "/?channel_id=" + channel;
     }, 3 * 1000);
   }
 
@@ -100,7 +99,7 @@ const ImageUploader = () => {
                   onChange={OnFileUploadToFirebase}
                 />
               </Button>
-              <Link to={'/'}>
+              <Link to={"/?channel_id=" + channel}>
                 ホームに戻る
               </Link>
             </div>

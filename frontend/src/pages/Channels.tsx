@@ -16,7 +16,7 @@ export default function Channels() {
   const [userChannels, setUserChannels] = useState<Channel[]>([]);
   const [otherChannels, setOtherChannels] = useState<Channel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { id } = useContext(UserContext);
+  const { id, channel } = useContext(UserContext);
 
   useEffect(() => {
     fetchData();
@@ -24,12 +24,12 @@ export default function Channels() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get( baseURL + '/channel/join?user_id=' + id );
-      const response2 = await axios.get( baseURL + '/channel/notjoin?user_id=' + id );
-      
-        setUserChannels(response.data);
-        setOtherChannels(response2.data);
-      
+      const response = await axios.get(baseURL + '/channel/join?user_id=' + id);
+      const response2 = await axios.get(baseURL + '/channel/notjoin?user_id=' + id);
+
+      setUserChannels(response.data);
+      setOtherChannels(response2.data);
+
     } catch (error) {
       console.log('データ取得の際にエラーが発生しました', error);
     } finally {
@@ -44,19 +44,19 @@ export default function Channels() {
   return (
     <div>
       <div>
-      <h2>参加しているチャンネル:</h2>
-      {userChannels.map(channel => (
-        <div key={channel.c_id}>{channel.name}</div>
-      ))}
+        <h2>参加しているチャンネル:</h2>
+        {userChannels.map(channel => (
+          <div key={channel.c_id}>{channel.name}</div>
+        ))}
 
-      <h2>参加していないチャンネル:</h2>
-      {otherChannels.map(channel => (
-        <div key={channel.c_id}>{channel.name}</div>
-      ))}
-    </div> 
+        <h2>参加していないチャンネル:</h2>
+        {otherChannels.map(channel => (
+          <div key={channel.c_id}>{channel.name}</div>
+        ))}
+      </div>
       <div>
-            <Link to={'/'}>ホームに戻る</Link>
-        </div>
+        <Link to={"/?channel_id=" + channel}>ホームに戻る</Link>
+      </div>
     </div>
   );
 }

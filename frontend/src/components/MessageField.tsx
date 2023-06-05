@@ -1,22 +1,73 @@
-import { useAuthContext } from "../context/AuthContext";
 import { useState, useEffect } from "react";
 import { baseURL } from "../App";
+import { useSearchParams } from "react-router-dom";
+import defaultIcon from "../images/defaultIcon.jpeg";
+import { ref } from "firebase/storage";
+import { storage } from "../firebase";
+import { getDownloadURL } from "firebase/storage";
+
+interface channel {
+  id: string,
+  channel_id: string,
+  user_id: string,
+  name: string,
+  email: string,
+  icon: string,
+  text: string,
+  created_at: string,
+  updated_at: string
+}
 
 function MessageField() {
-  const [messages, setMessages] = useState([{message: '',}]);
-  const { user } = useAuthContext();
+  const [messages, setMessages] = useState([{ message: '', }]);
+  const [searchParams] = useSearchParams();
+  let channel_id = searchParams.get("channel_id");
+
+  const convertToJapanTime = (dateString: string) => {
+    const receivedDate = new Date(dateString);
+    const offset = receivedDate.getTimezoneOffset();
+    const japanTime = new Date(receivedDate.getTime() - offset);
+    // console.log(japanTime)
+    const japanTimeFormatted = japanTime.toLocaleString();
+    return (
+      <div>{japanTimeFormatted}</div>
+    )
+  }
 
   useEffect(() => {
     fetchMessages()
-  }, [])
-  
+  }, [channel_id])
+
+  const IconHandler = (icon: string) => {
+    let IconURL = defaultIcon;
+    if (icon) {
+      try {
+        const gsReference = ref(storage, "gs://term3-shun-kondo.appspot.com/image/" + icon);
+        getDownloadURL(gsReference)
+          .then((url) => {
+            IconURL = url;
+          })
+          .catch((error) => {
+            console.log("アイコンの取得に失敗しました", error);
+          });
+      } catch (error) {
+        console.log("アイコンの取得に失敗しました", error);
+      }
+    } else {
+    }
+    return (
+      <img style={{ width: 36, height: 36 }} src={IconURL} alt="UserIcon" />
+    )
+  };
+
+  // console.log("searchParams.get(channelid): " + searchParams.get("channel_id"));
+
   const fetchMessages = async () => {
     try {
-      const res = await fetch(baseURL + "/message?email=" + user?.email);
+      const res = await fetch(baseURL + "/message?channel_id=" + channel_id);
       if (!res.ok) {
         throw Error(`Failed to fetch messages: ${res.status}`);
       }
-
       const messages = await res.json();
       setMessages(messages);
     } catch (err) {
@@ -26,25 +77,31 @@ function MessageField() {
 
   return (
     <div className="MessageField">
-      <div className="MessageContent">
-      <div>홍은채 {user?.email}</div>
-      I'm fearless
-      
-      {messages.map((f) => (
-        <div key={user?.email}>
-          <div className="MessageUser">
-            user名 時間
+      {messages.map((value: any) => (
+        // <div key={user?.email} >
+        <div className="MessageContent">
+
+          <div className="SenderIcon">{IconHandler(value.icon)}</div>
+
+          <div>
+            <div className="SenderInfo">
+              <div className="SenderName">{value.name}</div>
+              <div className="Time">{convertToJapanTime(value.created_at)}</div>
+            </div>
+            <div>
+              <div className="Message">
+                <span>
+                  {value.text?.split('\n').map((t: any) => (<span>{t}<br /></span>))}
+                </span>
+              </div>
+            </div>
           </div>
-          <div className="Message">
-            {f.message}
-            あああああああああああああああああ！！！！
-          </div>
+
         </div>
       ))}
-        
-      </div>
+
     </div>
   );
 }
-  
-  export default MessageField;
+
+export default MessageField;

@@ -7,6 +7,7 @@ import ImageUploader from "../ImageUploader";
 import Channels from "../pages/Channels";
 import NewChannel from "../pages/NewChannel";
 import Channel from "../pages/Channel";
+import Feedback from "../pages/Feedback";
 
 export const Router = () => {
   return (
@@ -14,13 +15,16 @@ export const Router = () => {
       <BrowserRouter>
         <Routes>
           <Route path={`/`} element={<Mypage />} />
-          <Route path={`/:id`} element={<Mypage />} />
+          <Route path={`/:channel_id`} element={<Mypage />} />
           <Route path={`/signup`} element={<SignUp />} />
           <Route path={`/login`} element={<Login />} />
           <Route path={`/image`} element={<ImageUploader />} />
           <Route path={`/channels`} element={<Channels />} />
           <Route path={`/channels/new`} element={<NewChannel />} />
           <Route path={`/channels/:channelid`} element={<Channel />} />
+
+          <Route path={`/feedback`} element={<Feedback />} />
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
