@@ -5,6 +5,9 @@ import defaultIcon from "../images/defaultIcon.jpeg";
 import { ref } from "firebase/storage";
 import { storage } from "../firebase";
 import { getDownloadURL } from "firebase/storage";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import ReplyIcon from '@mui/icons-material/Reply';
+import { IconButton } from "@mui/material";
 
 interface channel {
   id: string,
@@ -22,6 +25,7 @@ function MessageField() {
   const [messages, setMessages] = useState([{ message: '', }]);
   const [searchParams] = useSearchParams();
   let channel_id = searchParams.get("channel_id");
+  let IconURL = defaultIcon;
 
   const convertToJapanTime = (dateString: string) => {
     const receivedDate = new Date(dateString);
@@ -39,7 +43,6 @@ function MessageField() {
   }, [channel_id])
 
   const IconHandler = (icon: string) => {
-    let IconURL = defaultIcon;
     if (icon) {
       try {
         const gsReference = ref(storage, "gs://term3-shun-kondo.appspot.com/image/" + icon);
@@ -77,28 +80,45 @@ function MessageField() {
 
   return (
     <div className="MessageField">
-      {messages.map((value: any) => (
-        // <div key={user?.email} >
-        <div className="MessageContent">
+      {messages.map((value: any, key) => {
+        return (
+          <div className="MessageContent" key={key} >
 
-          <div className="SenderIcon">{IconHandler(value.icon)}</div>
 
-          <div>
-            <div className="SenderInfo">
-              <div className="SenderName">{value.name}</div>
-              <div className="Time">{convertToJapanTime(value.created_at)}</div>
-            </div>
-            <div>
-              <div className="Message">
-                <span>
-                  {value.text?.split('\n').map((t: any) => (<span>{t}<br /></span>))}
-                </span>
+            <IconButton sx={{ float: "right" }}>
+              <MoreVertIcon />
+            </ IconButton>
+            <IconButton sx={{ float: "right" }}>
+              <ReplyIcon />
+            </ IconButton>
+
+            <div className="MessageBody">
+
+              <div className="SenderIcon">{IconHandler(value.icon)}</div>
+
+              <div>
+                <div className="SenderInfo">
+                  <div className="SenderName">{value.name}</div>
+                  <div className="Time">{convertToJapanTime(value.created_at)}</div>
+                </div>
+                <div>
+                  <div className="Message">
+                    <span>
+                      {value.text?.split('\n').map((t: any, key: number) => (
+                        <span key={key}>{t}<br /></span>
+                      ))}
+                    </span>
+                  </div>
+                </div>
               </div>
+
+
             </div>
           </div>
+        )
+      })}
 
-        </div>
-      ))}
+      <div className="space"></div>
 
     </div>
   );

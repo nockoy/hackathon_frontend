@@ -36,7 +36,18 @@
   background: white;
   border-radius: 10px;
   box-shadow: 0px 0px 8px gray;
+}
+
+.MessageContent .support {
+  float: right;
+}
+
+.MessageContent .MessageBody {
   display: flex;
+}
+
+.MessageField .space {
+  height: 10px;
 }
 
 .SenderIcon {
@@ -198,6 +209,7 @@
   margin: 10px;
   border-radius: 10px;
   box-shadow: 0px 0px 8px gray;
+  background-color: #697fd7; 
 }
 
 .SidebarList .row:hover {
@@ -209,14 +221,19 @@
   background-color: #1164a3;
 }
 
-.row #icon {
-  flex: 30%;
+.SidebarList .row #icon {
+  flex: 25%;
   display: grid;
   place-items: center;
 }
 
-.row #title {
-  flex: 70%;
+.SidebarList .row #title {
+  flex: 75%;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  font-size: 14px;
 }
 
 .SidebarIcon {
@@ -276,4 +293,33 @@
   padding: 1em;
   background: #fff;
   border-radius: 30px;
+}
+
+.Allchannels {
+  display: flex;
+}
+
+.Allchannels .Channelcontainer {
+  width: 80%;
+  padding: 20px;
+}
+
+.Allchannels .channel {
+  background-color: white;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.Allchannels .channelname {
+  font-weight: bold;
+}
+
+.Allchannels .detail {
+  display: flex;
+}
+
+.Allchannels .join {
+  margin-right: 10px;
+  color: green;
 }
