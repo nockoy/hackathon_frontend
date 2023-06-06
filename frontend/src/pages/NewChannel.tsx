@@ -3,20 +3,22 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { baseURL } from "../App";
 import { UserContext } from "../context/UserContext";
+import TextField from '@mui/material/TextField';
 
 const NewChannel = () => {
-  //const [loginuser, setLoginuser] = useContext(UserContext)
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const navigation = useNavigate();
   const { id, channel } = useContext(UserContext);
-  const [values, setValues] = useState(
-    {
-      message: "",
-      isSubmitted: false
-    }
-  );
+  const [values, setValues] = useState({ name: "", description: "", isSubmitted: false });
+
+
+  const textfieldStyles = {
+    backgroundColor: "#ffffff",
+    fontFamily: "inherit"
+  };
+  const textlabelStyles = {
+    fontFamily: "inherit"
+  };
 
   const handleChange = (e: any) => {
     const target = e.target;
@@ -29,29 +31,34 @@ const NewChannel = () => {
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     //setDisable(true);
-    if (!name) {
+    if (!values.name) {
       alert("Please enter a Channelname");
       return;
     }
-    if (name.length > 50) {
+    if (values.name.length > 50) {
       alert("Please enter a Channelname shorter than 50 characters");
       return;
     }
-    if (!description) {
+    if (!values.description) {
       alert("Please enter description");
       return;
     }
-    if (description.length > 100) {
+    if (values.description.length > 100) {
       alert("Please enter description shorter than 100 characters");
       return;
     }
 
     try {
-      const response = await axios.post(baseURL + '/channel/join', {
-        name: name,
-        description: description
+      const res1 = await axios.post(baseURL + '/channel/join', {
+        name: values.name,
+        description: values.description
       });
-      navigation("/?channel_id=" + channel);
+      const res2 = await axios.post(baseURL + '/members', {
+        user_id: id,
+        channel_id: res1.data.id
+      });
+      // navigation("/?channel_id=" + channel);
+      navigation("/?channel_id=" + res1.data.id);
     } catch (error: any) {
       setError(`Failed to create new channel: ${error.message}`);
     }
@@ -65,20 +72,38 @@ const NewChannel = () => {
         <form className="form" onSubmit={handleSubmit}>
 
           <label>チャンネル名</label>
-          <input
+          <TextField
             name="name"
-            type="name"
-            placeholder="Channelname"
-            onChange={(event) => setName(event.target.value)}
+            id="outlined-textarea"
+            label="チャンネル名"
+            fullWidth
+            placeholder="Channel名を入力してください"
+            // variant="filled"
+            size="small"
+            margin="dense"
+            InputProps={{ style: textfieldStyles }}
+            InputLabelProps={{ style: textlabelStyles }}
+            value={values.name}
+            onChange={handleChange}
           />
 
 
           <label>チャンネルの説明</label>
-          <input
+          <TextField
             name="description"
-            type="description"
-            placeholder="Description"
-            onChange={(event) => setDescription(event.target.value)}
+            id="outlined-textarea"
+            label="Description"
+            fullWidth
+            multiline
+            rows={3}
+            placeholder="どのようなChannelですか？"
+            // variant="filled"
+            size="small"
+            margin="dense"
+            InputProps={{ style: textfieldStyles }}
+            InputLabelProps={{ style: textlabelStyles }}
+            value={values.description}
+            onChange={handleChange}
           />
 
           <button onClick={handleSubmit}/*disabled={disable}*/>登録する</button>
