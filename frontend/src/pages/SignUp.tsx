@@ -27,6 +27,7 @@ const SignUp = () => {
   //const [disable, setDisable] = useState(!name || !email || !password);
   const navigation = useNavigate();
   const { setUser } = useContext(UserContext);
+  let channel_id = "";
 
 
   const handleSubmit = async (event: any) => {
@@ -50,14 +51,17 @@ const SignUp = () => {
         name: name,
         email: email
       });
+      const response2 = await axios.get(baseURL + '/channel/join?user_id=' + response.data.id);
 
       await createUserWithEmailAndPassword(fireAuth, email, password);
+      
+      channel_id = response2.data[0].id;
+      
+      setUser(response.data.id, response.data.name, response.data.icon, channel_id);
 
-      setUser(response.data.id, response.data.name, response.data.icon, "");
-
-      navigation('/');
+      navigation('/?channel_id=' + channel_id);
     } catch (error: any) {
-      setError(`Failed to sign up: ${error.message}`);
+      setError(`Failed to sign up: ${error.message} \n登録できているかもしれません`);
     }
   }
 
