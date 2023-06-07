@@ -15,7 +15,7 @@ function Header() {
   const fetchData = async () => {
     try {
       const response = await axios.get(baseURL + '/channel?channel_id=' + channel_id);
-      setChannelName( response.data[0].name);
+      setChannelName(response.data[0].name);
     } catch (error) {
       console.log("channel_nameが取得できませんでした:" + error);
     }
@@ -23,7 +23,9 @@ function Header() {
 
   return (
     <div className="Header">
-      {ChannelName}
+      <div className="HeaderName">
+        {ChannelName}
+      </div>
     </div>
   );
 }

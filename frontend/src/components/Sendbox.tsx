@@ -10,6 +10,7 @@ import { baseURL } from '../App';
 
 
 const SendBox = () => {
+  const [flag, setFlag] = useState(false);
   const { id } = useContext(UserContext);
   const [searchParams] = useSearchParams();
 
@@ -58,6 +59,7 @@ const SendBox = () => {
       // console.log("channel_id: " + searchParams.get("channelid"));
       // console.log("送信成功");
       setValues({ message: "", isSubmitted: true });
+      setFlag(true);
     } catch (error: any) {
       console.error("Failed to send message:" + error);
     }
@@ -65,7 +67,7 @@ const SendBox = () => {
 
   useEffect(() => {
 
-  }, [handleSubmit])
+  }, [handleSubmit, flag])
 
   return (
     <div className="SendBox">
