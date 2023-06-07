@@ -1,13 +1,12 @@
+import { useState, useEffect, useContext } from "react";
+import { useSearchParams } from "react-router-dom";
+import { baseURL } from '../App';
+import { UserContext } from "../context/UserContext";
 import TextField from '@mui/material/TextField';
 import SendIcon from '@mui/icons-material/Send';
 import Button from '@mui/material/Button';
 import { createTheme } from '@mui/material/styles';
-import { UserContext } from "../context/UserContext";
-import { useState, useEffect, useContext } from "react";
-import { useSearchParams } from "react-router-dom";
 import axios from "axios";
-import { baseURL } from '../App';
-
 
 const SendBox = () => {
   const [flag, setFlag] = useState(false);
@@ -55,9 +54,6 @@ const SendBox = () => {
         user_id: id,
         text: values.message
       });
-      // console.log("searchParams.get(channelid): " + searchParams.get("channelid"));
-      // console.log("channel_id: " + searchParams.get("channelid"));
-      // console.log("送信成功");
       setValues({ message: "", isSubmitted: true });
       setFlag(true);
     } catch (error: any) {

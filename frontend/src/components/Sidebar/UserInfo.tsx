@@ -1,13 +1,10 @@
-import defaultIcon from "../../images/defaultIcon.jpeg";
+import { getDownloadURL } from "firebase/storage";
+import { useState, useEffect, useContext } from "react";
 import { useAuthContext } from '../../context/AuthContext';
+import { UserContext } from '../../context/UserContext';
 import { ref } from "firebase/storage";
 import { storage } from "../../firebase";
-import { getDownloadURL } from "firebase/storage";
-import { useState, useEffect } from "react";
-import { useContext } from 'react';
-import { UserContext } from '../../context/UserContext';
-import { useParams } from "react-router-dom";
-
+import defaultIcon from "../../images/defaultIcon.jpeg";
 
 function UserInfo() {
   const { user } = useAuthContext();
@@ -34,8 +31,6 @@ function UserInfo() {
       setImage(defaultIcon); // アイコンが指定されていない場合はデフォルトのアイコンを表示
     }
   }, [icon]);
-
-  //.catch((err) => console.log(err));
 
   return (
     <div>

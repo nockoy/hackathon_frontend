@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from 'react';
-import axios from 'axios';
 import { baseURL } from '../App';
 import { UserContext } from '../context/UserContext';
-import CheckIcon from '@mui/icons-material/Check';
-import { Button } from '@mui/material';
 import Sidebar from '../components/Sidebar/Sidebar';
 import Topbar from '../components/Topbar';
+import CheckIcon from '@mui/icons-material/Check';
+import { Button } from '@mui/material';
+import axios from 'axios';
 
 interface Channel {
   id: string;
@@ -20,7 +20,7 @@ export default function Channels() {
   const [otherChannels, setOtherChannels] = useState<Channel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { id } = useContext(UserContext);
-  const [flag, setFlag] = useState("");
+  const [flag, setFlag] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -45,17 +45,31 @@ export default function Channels() {
     return <div>Loading...</div>;
   }
 
-  const handleSubmit = async (channel_id: string) => {
+  const addChannel = async (channel_id: string) => {
     try {
       const response = await axios.post(baseURL + '/members', {
         user_id: id,
         channel_id: channel_id
       });
-      setFlag(channel_id);
+      setFlag(!flag);
     } catch (error: any) {
       console.error("Failed to join channel:" + error);
     }
   }
+
+  const leaveChannel = async (channel_id: string) => {
+    axios.delete(baseURL + '/members', {
+      data: {
+        user_id: id,
+        channel_id: channel_id
+      }
+    })
+      .then(() => {
+        setFlag(!flag);
+      })
+      .catch((err) => { throw Error(`Failed to delete the member: ${err}`) });
+  }
+
 
   return (
     <div>
@@ -66,6 +80,13 @@ export default function Channels() {
 
           {userChannels.map((channel, key) => (
             <div className='channel' key={key}>
+              <Button
+                variant="outlined"
+
+                sx={{ float: "right" }}
+                onClick={() => leaveChannel(channel.id)}>
+                退出する
+              </Button>
               <div className='channelname' key={channel.id}># {channel.name}</div>
               <div className='detail'>
                 <CheckIcon sx={{ color: "green" }} />
@@ -82,7 +103,7 @@ export default function Channels() {
                 variant="contained"
                 color="success"
                 sx={{ float: "right" }}
-                onClick={() => handleSubmit(channel.id)}>
+                onClick={() => addChannel(channel.id)}>
                 参加する
               </Button>
 

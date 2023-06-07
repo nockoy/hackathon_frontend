@@ -1,5 +1,5 @@
 
-import { Route, Navigate, RouteProps } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useAuthContext } from '../context/AuthContext';
 import { ReactElement, ReactNode } from 'react';
 

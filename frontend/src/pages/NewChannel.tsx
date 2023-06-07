@@ -1,9 +1,9 @@
 import { useState, useContext } from "react";
 import { Link, useNavigate } from 'react-router-dom';
-import axios from "axios";
 import { baseURL } from "../App";
 import { UserContext } from "../context/UserContext";
 import TextField from '@mui/material/TextField';
+import axios from "axios";
 
 const NewChannel = () => {
   const [error, setError] = useState("");

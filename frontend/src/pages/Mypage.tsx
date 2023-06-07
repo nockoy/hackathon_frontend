@@ -1,13 +1,12 @@
+import { useState, useEffect, useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuthContext } from '../context/AuthContext';
+import { UserContext } from '../context/UserContext';
 import Sidebar from "../components/Sidebar/Sidebar";
 import Topbar from "../components/Topbar";
 import Header from "../components/Header";
 import MessageField from "../components/MessageField";
 import SendBox from "../components/Sendbox";
-import { useContext } from 'react';
-import { UserContext } from '../context/UserContext';
-import { useState, useEffect } from 'react';
 import { baseURL } from '../App';
 import axios from 'axios';
 

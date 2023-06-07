@@ -5,7 +5,7 @@ function Topbar() {
     <div className="Topbar">
       <div className='SearchBox'
         style={{
-          width:"80vw"
+          width: "80vw"
         }}>
         <TextField
           fullWidth
@@ -15,7 +15,7 @@ function Topbar() {
           size="small"
           margin="dense"
         />
-      </div>  
+      </div>
     </div>
   );
 }

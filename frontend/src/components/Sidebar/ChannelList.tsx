@@ -1,9 +1,9 @@
-import TagIcon from '@mui/icons-material/Tag';
 import { useContext, useEffect, useState } from 'react';
-import axios from 'axios';
-import { baseURL } from '../../App';
-import { UserContext } from '../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../context/UserContext';
+import { baseURL } from '../../App';
+import TagIcon from '@mui/icons-material/Tag';
+import axios from 'axios';
 
 interface Channel {
   c_id: string;
@@ -20,7 +20,7 @@ function ChannelList() {
 
   useEffect(() => {
     fetchData();
-  }, []);//いける？
+  }, []);
 
   const fetchData = async () => {
     try {
