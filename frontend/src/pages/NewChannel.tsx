@@ -35,7 +35,7 @@ const NewChannel = () => {
       alert("Please enter a Channelname");
       return;
     }
-    if (values.name.length > 50) {
+    if (values.name.length > 18) {
       alert("Please enter a Channelname shorter than 50 characters");
       return;
     }
