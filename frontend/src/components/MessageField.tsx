@@ -56,21 +56,21 @@ export default function MessageField() {
   }, [channel_id, flag])
 
   const IconHandler = (icon: string) => {
-    // if (icon) {
-    //   try {
-    //     const gsReference = ref(storage, "gs://term3-shun-kondo.appspot.com/image/" + icon);
-    //     getDownloadURL(gsReference)
-    //       .then((url) => {
-    //         IconURL = url;
-    //       })
-    //       .catch((error) => {
-    //         console.log("アイコンの取得に失敗しました", error);
-    //       });
-    //   } catch (error) {
-    //     console.log("アイコンの取得に失敗しました", error);
-    //   }
-    // } else {
-    // }
+    if (icon) {
+      try {
+        const gsReference = ref(storage, "gs://term3-shun-kondo.appspot.com/image/" + icon);
+        getDownloadURL(gsReference)
+          .then((url) => {
+            IconURL = url;
+          })
+          .catch((error) => {
+            console.log("アイコンの取得に失敗しました", error);
+          });
+      } catch (error) {
+        console.log("アイコンの取得に失敗しました", error);
+      }
+    } else {
+    }
     return (
       <img style={{ width: 36, height: 36 }} src={IconURL} alt="UserIcon" />
     )

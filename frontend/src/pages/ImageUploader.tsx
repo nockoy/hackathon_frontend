@@ -1,13 +1,13 @@
-import { Button } from "@mui/material";
-import ImageLogo from "./images/image.svg";
-import "./ImageUpload.css";
-import { storage } from "./firebase"
-import { ref, uploadBytesResumable } from "firebase/storage";
 import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import { UserContext } from "./context/UserContext";
+import { storage } from "../firebase"
+import { ref, uploadBytesResumable } from "firebase/storage";
+import { baseURL } from "../App";
+import ImageLogo from "../images/image.svg";
+import { UserContext } from "../context/UserContext";
+import { Button } from "@mui/material";
 import axios from "axios";
-import { baseURL } from "./App";
+
 
 const ImageUploader = () => {
   const [loading, setLoading] = useState(false);
@@ -36,7 +36,8 @@ const ImageUploader = () => {
           setUploaded(true);
 
           try {
-            await axios.put(baseURL + '/user/' + id, {
+            const response = await axios.put(baseURL + '/user', {
+              id: id,
               icon: file.name,
             });
           } catch (error) {
@@ -53,7 +54,7 @@ const ImageUploader = () => {
   if (loading === false && isUploaded === true) {
     setTimeout(() => {
       window.location.href = "/?channel_id=" + channel;
-    }, 3 * 1000);
+    }, 1 * 1000);
   }
 
   return (
@@ -66,14 +67,15 @@ const ImageUploader = () => {
           {isUploaded ? (
             <div>
               <h2>アップロード完了しました！</h2>
-              <h2>3秒後にホームに戻ります!</h2>
+              <h2>1秒後にホームに戻ります!</h2>
             </div>
           ) : (
             <div className="outerBox">
               <div className="title">
-                <h1>バックエンドでIconの更新機能を追加する!!</h1>
-                <h2>画像をアップロード</h2>
-                <p>JpegかPngの画像ファイル</p>
+                <h1>画像アップロード</h1>
+                <br />
+                <p>JpegかPngの画像ファイルを添付してください</p>
+                <br />
               </div>
               <div className="imageUplodeBox">
                 <div className="imageLogoAndText">
@@ -90,6 +92,7 @@ const ImageUploader = () => {
                 />
               </div>
               <p>または</p>
+              <br />
               <Button variant="contained">
                 ファイルを選択
                 <input
@@ -99,6 +102,7 @@ const ImageUploader = () => {
                   onChange={OnFileUploadToFirebase}
                 />
               </Button>
+              <br />
               <Link to={"/?channel_id=" + channel}>
                 ホームに戻る
               </Link>

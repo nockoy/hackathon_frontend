@@ -1,13 +1,13 @@
 import { useContext, useState } from "react";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-
+import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { fireAuth } from '../firebase';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from "axios";
 import { baseURL } from "../App";
 import { UserContext } from "../context/UserContext";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import axios from "axios";
+
 
 interface Channel {
   c_id: string;
@@ -54,9 +54,9 @@ const SignUp = () => {
       const response2 = await axios.get(baseURL + '/channel/join?user_id=' + response.data.id);
 
       await createUserWithEmailAndPassword(fireAuth, email, password);
-      
+
       channel_id = response2.data[0].id;
-      
+
       setUser(response.data.id, response.data.name, response.data.icon, channel_id);
 
       navigation('/?channel_id=' + channel_id);
