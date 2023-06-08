@@ -6,6 +6,7 @@ import NotFound from "../pages/NotFound";
 import ImageUploader from "../pages/ImageUploader";
 import Channels from "../pages/AllChannels";
 import NewChannel from "../pages/NewChannel";
+import Message from "../pages/Message";
 
 export const Router = () => {
   return (
@@ -14,11 +15,13 @@ export const Router = () => {
         <Routes>
           <Route path={`/`} element={<Mypage />} />
           <Route path={`/:channel_id`} element={<Mypage />} />
+          <Route path={`/:channel_id/:message_id`} element={<Message />} />
           <Route path={`/signup`} element={<SignUp />} />
           <Route path={`/login`} element={<Login />} />
           <Route path={`/image`} element={<ImageUploader />} />
           <Route path={`/channels`} element={<Channels />} />
           <Route path={`/channels/new`} element={<NewChannel />} />
+          
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

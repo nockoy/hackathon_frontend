@@ -1,6 +1,7 @@
 import ImageIcon from '@mui/icons-material/Image';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import AddBoxIcon from '@mui/icons-material/AddBox';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 const SidebarData = [
   
@@ -18,6 +19,11 @@ const SidebarData = [
     title: "アイコン変更",
     icon: <ImageIcon />,
     link: "/image",
+  },
+  {
+    title: "プロフィール",
+    icon: <AccountBoxIcon />,
+    link: "/profile",
   },
 ];
 

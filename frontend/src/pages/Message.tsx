@@ -15,6 +15,7 @@ import Button from '@mui/material/Button';
 import { createTheme } from '@mui/material/styles';
 import axios from "axios";
 
+
 interface channel {
   id: string,
   channel_id: string,
@@ -28,16 +29,17 @@ interface channel {
 }
 
 
-export default function MessageField() {
+export default function Message() {
   const [messages, setMessages] = useState([{ message: '', }]);
   const [flag, setFlag] = useState(false);
   const [searchParams] = useSearchParams();
   const { id } = useContext(UserContext);
   const [showEdit, setShowEdit] = useState(false);
   const [showReply, setShowReply] = useState(false);
-  const [showMSGID, setShowMSGID] = useState("");
+  let OriginalMessage = "";
 
   let channel_id = searchParams.get("channel_id");
+  let message_id = searchParams.get("message_id");
   let IconURL = defaultIcon;
 
   const convertToJapanTime = (dateString: string) => {
@@ -49,9 +51,9 @@ export default function MessageField() {
   }
 
   useEffect(() => {
-    fetchMessages();
+    fetchReplies();
     setFlag(false);
-  }, [channel_id, flag])
+  }, [flag])
 
   const IconHandler = (icon: string) => {
     if (icon) {
@@ -74,9 +76,23 @@ export default function MessageField() {
     )
   };
 
-  const fetchMessages = async () => {
+  const fetchOriginalMessage = async () => {
     try {
       const res = await fetch(baseURL + "/message?channel_id=" + channel_id);
+      if (!res.ok) {
+        throw Error(`Failed to fetch message: ${res.status}`);
+      }
+      const message = await res.json();
+      console.log(message);
+      OriginalMessage = message;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const fetchReplies = async () => {
+    try {
+      const res = await fetch(baseURL + "/reply?reply_id=" + message_id);
       if (!res.ok) {
         throw Error(`Failed to fetch messages: ${res.status}`);
       }
@@ -87,53 +103,20 @@ export default function MessageField() {
     }
   };
 
+
   const deleteMessage = (msg_id: string) => {
+    // console.log("次のIDのメッセージを消去します: " + msg_id);
+    // console.log(baseURL + "/message?id=" + msg_id);
     axios.delete(baseURL + "/message", {
       data: { id: msg_id }
     })
       .then(() => {
-        // console.log("メッセージを削除しました。");
+        console.log("メッセージを削除しました。");
         setFlag(true);
       })
       .catch((err) => { throw Error(`Failed to delete the message: ${err}`) });
   }
 
-  const change1 = (id: string) => {
-    if (showMSGID === id) {
-      if (showEdit === true) {
-        setShowMSGID(id);
-        setShowEdit(false);
-        setShowReply(true);
-      } else {
-        setShowMSGID("");
-        setShowEdit(false);
-        setShowReply(false);
-      }
-
-    } else {
-      setShowMSGID(id);
-      setShowEdit(false);
-      setShowReply(true);
-    }
-  }
-
-  const change2 = (id: string) => {
-    if (showMSGID === id) {
-      if (showReply === true) {
-        setShowMSGID(id);
-        setShowEdit(true);
-        setShowReply(false);
-      } else {
-        setShowMSGID("");
-        setShowEdit(false);
-        setShowReply(false);
-      }
-    } else {
-      setShowMSGID(id);
-      setShowEdit(true);
-      setShowReply(false);
-    }
-  }
 
   return (
     <div className="MessageField">
@@ -145,7 +128,7 @@ export default function MessageField() {
 
               <IconButton
                 sx={{ float: "right" }}
-                onClick={() => change1(value.id)}
+                onClick={() => (setShowReply(!showReply), setShowEdit(false))}
               >
                 <ReplyIcon />
               </ IconButton>
@@ -160,7 +143,7 @@ export default function MessageField() {
                       <div>
                         <IconButton
                           sx={{ float: "right" }}
-                          onClick={() => change2(value.id)}
+                          onClick={() => (setShowEdit(!showEdit), setShowReply(false))}
                         >
                           <EditIcon />
                         </ IconButton>
@@ -189,54 +172,40 @@ export default function MessageField() {
                               })()}
                             </div>
                             <div>
-                              {showEdit ? (<></>) : (
-                                <div className="Message">
-                                  <span>
-                                    {value.text?.split('\n').map((t: any, key: number) => (
-                                      <span key={key}>{t}<br /></span>
-                                    ))}
-                                  </span>
-                                </div>
-                              )}
+                              <div className="Message">
+                                <span>
+                                  {value.text?.split('\n').map((t: any, key: number) => (
+                                    <span key={key}>{t}<br /></span>
+                                  ))}
 
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
 
                         <div>
-                          {(() => {
-                            if (showMSGID === value.id) {
-                              return (
-                                <div>
-
-                                  {showEdit ? (<div>
-                                    <br />
-                                    <SendBox msg_id={value.id} original_text={value.text} type="Edit" />
-                                  </div>)
-                                    : (<></>)
-                                  }
-
-                                  {showReply ? (<div>
-                                    <br />
-                                    <SendBox reply_to_id={value.id} user_id={id} text={value.text} type="Reply" />
-                                  </div>)
-                                    : (<></>)
-                                  }
-
-                                </div>
-                              );
-                            }
-                          })()}
+                          {showEdit ? (
+                            <div>
+                              <br />
+                              <SendBox msg_id={value.id} text={value.text} type="Edit" />
+                            </div>
+                          ) : (
+                            <div></div>
+                          )}
+                          {showReply ? (
+                            <div>
+                              <br /><SendBox reply_to_id={value.id} user_id={id} text={value.text} type="Reply" />
+                            </div>
+                          ) : (<></>)
+                          }
                         </div>
 
                       </div>
                     );
 
-                    ////ここまで自分の画面////
-
-                  } else {
-
                     ////ここから他人の画面////
+                  } else {
                     return (
                       <div>
                         <div className="MessageBody">
@@ -266,25 +235,17 @@ export default function MessageField() {
                             </div>
                           </div>
                         </div>
-                        <div>
-
-
-                          {(() => {
-                            if (showMSGID === value.id) {
-                              return (
-                                <div>
-                                  <br />
-                                  <SendBox reply_to_id={value.id} user_id={id} text={value.text} type="Reply" />
-                                </div>
-                              );
-                            }
-                          })()}
-
+                        <div>{showReply ? (
+                          <div>
+                            <br />
+                            <SendBox reply_to_id={value.id} user_id={id} text={value.text} type="Reply" />
+                          </div>
+                        ) : (<></>)}
                         </div>
                       </div>
                     )
                   }
-                  ////ここまで他人の画面////
+
 
                 })()
               }
@@ -322,7 +283,7 @@ const SendBox = (props: any) => {
   //state定義
   const [values, setValues] = useState(
     {
-      message: props.original_text,
+      message: "",
       isSubmitted: false
     }
   );
@@ -385,7 +346,7 @@ const SendBox = (props: any) => {
                   label="メッセージを編集する"
                   fullWidth
                   multiline
-                  minRows={3}
+                  rows={3}
                   // placeholder=""
                   // variant="filled"
                   size="small"
@@ -394,7 +355,6 @@ const SendBox = (props: any) => {
                   InputLabelProps={{ style: textlabelStyles }}
                   value={values.message}
                   onChange={handleChange}
-                  placeholder={props.original_text}
                 />
                 <Button
                   // variant="contained"
@@ -437,6 +397,8 @@ const SendBox = (props: any) => {
             )
           }
         })()}
+
+
 
       </div>
     </div>

@@ -46,7 +46,7 @@ const SendBox = () => {
     setValues({ ...values, [name]: value });
   };
 
-  const handleSubmit = async (event: any) => {
+  const handleSubmit = async () => {
 
     try {
       const response = await axios.post(baseURL + '/message', {

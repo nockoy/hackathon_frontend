@@ -21,7 +21,7 @@ const Login = () => {
 
     try {
       await signInWithEmailAndPassword(fireAuth, email.value, password.value);
-      const response = await axios.get(baseURL + "/user?email=" + email.value);
+      const response = await axios.get(baseURL + "/user2?email=" + email.value);
       const response2 = await axios.get(baseURL + '/channel/join?user_id=' + response.data[0].id);
       let channel_id = "";
       try {
