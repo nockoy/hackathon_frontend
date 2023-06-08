@@ -17,12 +17,12 @@
 
 
 .SendBox {
-  height: 140px;
+  min-height: 140px;
   display: flex;
   justify-content: center;
   padding: 0px;
   overflow: auto;
-  box-shadow: 0px 0px 8px gray;
+  /* box-shadow: 0px 0px 8px gray; */
   border-radius: 10px;
 }
 
@@ -269,6 +269,24 @@
   color: white;
   font-weight: 600;
   font-size: 13px;
+}
+
+.profile {
+  display: flex;
+}
+
+.profileCntent {
+  margin-left: 10px;
+}
+
+.profileHeadline {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.profileItem {
+  font-size: 18px;
+  
 }
 
 .logoutModal {
