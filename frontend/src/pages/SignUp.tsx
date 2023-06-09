@@ -59,7 +59,7 @@ const SignUp = () => {
 
       setUser(response.data.id, response.data.name, response.data.icon, channel_id);
 
-      navigation('/?channel_id=' + channel_id);
+      navigation('/?channel-id=' + channel_id);
     } catch (error: any) {
       setError(`Failed to sign up: ${error.message} \n登録できているかもしれません`);
     }

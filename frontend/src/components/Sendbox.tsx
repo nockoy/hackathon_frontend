@@ -50,7 +50,7 @@ const SendBox = () => {
 
     try {
       const response = await axios.post(baseURL + '/message', {
-        channel_id: searchParams.get("channel_id"),
+        channel_id: searchParams.get("channel-id"),
         user_id: id,
         text: values.message
       });
@@ -58,6 +58,27 @@ const SendBox = () => {
       setFlag(true);
     } catch (error: any) {
       console.error("Failed to send message:" + error);
+    }
+  }
+
+  const checkTextArea = (e: any) => {
+    if (e.type === undefined) {
+      return
+    } else {
+      const newText = e.replace(/\n/g, "")
+      return newText.length > 500;
+    }
+  }
+
+  const disable = (e: any) => {
+    if (e) {
+      if (e.length > 500) {
+        return true
+      } else {
+        return false
+      }
+    } else {
+      return true
     }
   }
 
@@ -69,7 +90,8 @@ const SendBox = () => {
     <div className="SendBox">
       <div className='TextBox'
         style={{
-          width: "60vw" /*テキストボックスの横幅*/
+          width: "60vw", /*テキストボックスの横幅*/
+          display: "flex"
         }}>
         <TextField
           name="message"
@@ -86,16 +108,23 @@ const SendBox = () => {
           InputLabelProps={{ style: textlabelStyles }}
           value={values.message}
           onChange={handleChange}
+          error={values.message.length > 500}
+          helperText={values.message.length > 500 && ("500字以内で入力してください")}
         />
-        <Button
-          // variant="contained"
-          size="large"
-          endIcon={<SendIcon />}
-          disabled={(values.message) ? false : true}
-          onClick={handleSubmit}
-        >
-        </Button>
+        <div className="SendSide">
+          <div className="LengthCount">{values.message.length}/500</div>
+          <Button
+            // variant="contained"
+            size="large"
+            endIcon={<SendIcon />}
+            disabled={disable(values.message)}
+            onClick={handleSubmit}
+          >
+          </Button>
+
+        </div>
       </div>
+
     </div>
   );
 }

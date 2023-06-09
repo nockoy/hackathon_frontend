@@ -1,8 +1,12 @@
+import { useContext } from "react";
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from "../context/UserContext";
 
 
 const NotFound = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { channel } = useContext(UserContext);
+
 
   return (
     <div className="NotFound">
@@ -11,7 +15,7 @@ const NotFound = () => {
             404 NotFound
           </h1>
         <h3>お探しのページは見つかりませんでした。</h3>
-        <button onClick={() => navigate('/')}>ホームに戻る</button>
+        <button onClick={() => navigate("/?channel-id=" + channel)}>ホームに戻る</button>
       </div>
     </div>
   );

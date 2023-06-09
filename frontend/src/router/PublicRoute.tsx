@@ -13,7 +13,7 @@ const PublicRoute = ({ component: Component, path, exact }: PublicRouteProps): R
   const { user } = useAuthContext();
 
   if (user) {
-    return <Navigate to="/" />;
+    return <Navigate to="/login" />;
   }
 
   return <Component />;

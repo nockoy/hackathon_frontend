@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router-dom";
 
 function Header() {
   const [searchParams] = useSearchParams();
-  let channel_id = searchParams.get("channel_id");
+  let channel_id = searchParams.get("channel-id");
   const [ChannelName, setChannelName] = useState("");
 
   useEffect(() => {

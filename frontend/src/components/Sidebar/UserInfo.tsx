@@ -1,5 +1,5 @@
 import { getDownloadURL } from "firebase/storage";
-import { useNavigate, Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import { useAuthContext } from '../../context/AuthContext';
 import { UserContext } from '../../context/UserContext';
@@ -62,24 +62,6 @@ function UserInfo() {
   };
 
   useEffect(() => {
-    if (icon) {
-      try {
-        const gsReference = ref(storage, "gs://term3-shun-kondo.appspot.com/image/" + icon);
-        getDownloadURL(gsReference)
-          .then((url) => {
-            setImage(url);
-          })
-          .catch((error) => {
-            console.log("アイコンの取得に失敗しました", error);
-            setImage(defaultIcon); // アイコンが存在しない場合はデフォルトのアイコンを表示
-          });
-      } catch (error) {
-        console.log("アイコンの取得に失敗しました", error);
-        setImage(defaultIcon); // アイコンが存在しない場合はデフォルトのアイコンを表示
-      }
-    } else {
-      setImage(defaultIcon); // アイコンが指定されていない場合はデフォルトのアイコンを表示
-    }
   }, [icon, channel_id, flag]);
 
   const handleChange = (e: any) => {
@@ -107,7 +89,12 @@ function UserInfo() {
   return (
     <div>
       <div className="SidebarIcon" onClick={handleOpen}>
-        <img style={{ width: 100, height: 100 }} src={image} alt="UserIcon" />
+        {icon ? (
+          <img style={{ width: 100, height: 100, borderRadius: 9 }} src={icon} alt="UserIcon" />
+        ) : (
+          <img style={{ width: 100, height: 100, borderRadius: 9 }} src={image} alt="UserIcon" />
+        )}
+
         <p>{name}</p>
       </div>
       <Modal
@@ -118,81 +105,84 @@ function UserInfo() {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" >
-            <div><div className='Channelcontainer'>
+            <div>
+              <div className='Channelcontainer'>
 
-              <div className="profile">
-                <AccountBoxIcon />
-                <div className="profileCntent">
-                  <div className="profileHeadline">名前</div>
-                  <div className="profileItem">
-                    {name}
-                    <Button
-                      // variant="contained"
-                      size="large"
-                      endIcon={<EditIcon />}
-                      onClick={() => setShow(!show)}
-                    >
-                    </Button>
-                    {show ? (
-                      <Box
-                        component="form"
-                        sx={{
-                          '& > :not(style)': { m: 1, width: '25ch' },
-                        }}
-                        noValidate
-                        autoComplete="off"
+                <div className="profile">
+                  <AccountBoxIcon />
+                  <div className="profileCntent">
+                    <div className="profileHeadline">名前</div>
+                    <div className="profileItem">
+                      {name}
+                      <Button
+                        // variant="contained"
+                        size="large"
+                        endIcon={<EditIcon />}
+                        onClick={() => setShow(!show)}
                       >
-                        <div>
-                        <TextField
-                          name="message"
-                          id="standard-basic"
-                          label="新しい名前"
-                          variant="standard"
-                          placeholder="50文字以内で入力"
-                          InputProps={{ style: textfieldStyles }}
-                          InputLabelProps={{ style: textlabelStyles }}
-                          value={values.message}
-                          onChange={handleChange}
-                        />
-                        <Button
-                          // variant="contained"
-                          size="large"
-                          endIcon={<SendIcon />}
-                          disabled={(values.message) ? false : true}
-                          onClick={handleSubmit}
+                      </Button>
+                      {show ? (
+                        <Box
+                          component="form"
+                          sx={{
+                            '& > :not(style)': { m: 1, width: '25ch' },
+                          }}
+                          noValidate
+                          autoComplete="off"
                         >
-                        </Button>
-                        </div>
-                      </Box>
-                    ) : (<></>)}
+                          <div>
+                            <TextField
+                              name="message"
+                              id="standard-basic"
+                              label="新しい名前"
+                              variant="standard"
+                              placeholder="50文字以内で入力"
+                              InputProps={{ style: textfieldStyles }}
+                              InputLabelProps={{ style: textlabelStyles }}
+                              value={values.message}
+                              onChange={handleChange}
+                            />
+                            <Button
+                              // variant="contained"
+                              size="large"
+                              endIcon={<SendIcon />}
+                              disabled={(values.message) ? false : true}
+                              onClick={handleSubmit}
+                            >
+                            </Button>
+                          </div>
+                        </Box>
+                      ) : (<></>)}
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <br />
+                <br />
 
-              <div className="profile">
-                <EmailIcon />
-                <div className="profileCntent">
-                  <div className="profileHeadline">Email</div>
-                  <div className="profileItem">{user?.email}</div>
+                <div className="profile">
+                  <EmailIcon />
+                  <div className="profileCntent">
+                    <div className="profileHeadline">Email</div>
+                    <div className="profileItem">{user?.email}</div>
+                  </div>
                 </div>
-              </div>
 
-              <br />
+                <br />
 
-              <div className="profile">
-                <ImageIcon />
-                <div className="profileCntent">
-                  <div className="profileHeadline">アイコン</div>
-                  <div className="profileItem">{icon}</div>
-                  <Link to={"/image"}>
-                    アイコンを変更する
-                  </Link>
+                <div className="profile">
+                  <ImageIcon />
+                  <div className="profileCntent">
+                    <div className="profileHeadline">アイコン</div>
+                    <div className="profileItem">
+                      {icon}
+                    </div>
+                    <Link to={"/image"}>
+                      アイコンを変更する
+                    </Link>
+                  </div>
                 </div>
-              </div>
 
-            </div>
+              </div>
             </div>
           </Typography>
         </Box>

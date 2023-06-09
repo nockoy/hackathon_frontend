@@ -26,6 +26,17 @@
   border-radius: 10px;
 }
 
+
+
+.SendBox .SendSide {
+  margin-left: 10px;
+}
+
+.SendBox .LengthCount {
+  margin-top: 10px;
+  margin-left: 5px;
+}
+
 .Header {
   height: 30px;
   min-width: 300px;
@@ -273,10 +284,11 @@
 
 .profile {
   display: flex;
+  width: 300px;
 }
 
-.profileCntent {
-  margin-left: 10px;
+.profileContent {
+  margin-left: 0px;
 }
 
 .profileHeadline {
@@ -286,6 +298,10 @@
 
 .profileItem {
   font-size: 18px;
+  width: 300px;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: scroll;
   
 }
 
