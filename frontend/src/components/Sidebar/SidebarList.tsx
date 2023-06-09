@@ -15,16 +15,16 @@ const SidebarData = [
     icon: <AddBoxIcon />,
     link: "/channels/new", //モーダルにすると良いかも
   },
-  {
-    title: "アイコン変更",
-    icon: <ImageIcon />,
-    link: "/image",
-  },
-  {
-    title: "プロフィール",
-    icon: <AccountBoxIcon />,
-    link: "/profile",
-  },
+  // {
+  //   title: "アイコン変更",
+  //   icon: <ImageIcon />,
+  //   link: "/image",
+  // },
+  // {
+  //   title: "プロフィール",
+  //   icon: <AccountBoxIcon />,
+  //   link: "/profile",
+  // },
 ];
 
 function SidebarList() {

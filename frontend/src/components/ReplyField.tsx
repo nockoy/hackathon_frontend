@@ -7,14 +7,13 @@ import { ref } from "firebase/storage";
 import { storage } from "../firebase";
 import { getDownloadURL } from "firebase/storage";
 import ReplyIcon from '@mui/icons-material/Reply';
-import { IconButton, dividerClasses } from "@mui/material";
+import { IconButton } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { createTheme } from '@mui/material/styles';
 import axios from "axios";
-
 
 interface channel {
   id: string,
@@ -29,17 +28,16 @@ interface channel {
 }
 
 
-export default function Message() {
+export default function ReplyField() {
   const [messages, setMessages] = useState([{ message: '', }]);
   const [flag, setFlag] = useState(false);
   const [searchParams] = useSearchParams();
   const { id } = useContext(UserContext);
   const [showEdit, setShowEdit] = useState(false);
   const [showReply, setShowReply] = useState(false);
-  let OriginalMessage = "";
+  const [showMSGID, setShowMSGID] = useState("");
 
-  let channel_id = searchParams.get("channel_id");
-  let message_id = searchParams.get("message_id");
+  let channel_id = searchParams.get("channel-id");
   let IconURL = defaultIcon;
 
   const convertToJapanTime = (dateString: string) => {
@@ -51,9 +49,9 @@ export default function Message() {
   }
 
   useEffect(() => {
-    fetchReplies();
+    fetchMessages();
     setFlag(false);
-  }, [flag])
+  }, [channel_id, flag])
 
   const IconHandler = (icon: string) => {
     if (icon) {
@@ -76,23 +74,9 @@ export default function Message() {
     )
   };
 
-  const fetchOriginalMessage = async () => {
+  const fetchMessages = async () => {
     try {
       const res = await fetch(baseURL + "/message?channel_id=" + channel_id);
-      if (!res.ok) {
-        throw Error(`Failed to fetch message: ${res.status}`);
-      }
-      const message = await res.json();
-      console.log(message);
-      OriginalMessage = message;
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const fetchReplies = async () => {
-    try {
-      const res = await fetch(baseURL + "/reply?reply_id=" + message_id);
       if (!res.ok) {
         throw Error(`Failed to fetch messages: ${res.status}`);
       }
@@ -103,20 +87,53 @@ export default function Message() {
     }
   };
 
-
   const deleteMessage = (msg_id: string) => {
-    // console.log("次のIDのメッセージを消去します: " + msg_id);
-    // console.log(baseURL + "/message?id=" + msg_id);
     axios.delete(baseURL + "/message", {
       data: { id: msg_id }
     })
       .then(() => {
-        console.log("メッセージを削除しました。");
+        // console.log("メッセージを削除しました。");
         setFlag(true);
       })
       .catch((err) => { throw Error(`Failed to delete the message: ${err}`) });
   }
 
+  const change1 = (id: string) => {
+    if (showMSGID === id) {
+      if (showEdit === true) {
+        setShowMSGID(id);
+        setShowEdit(false);
+        setShowReply(true);
+      } else {
+        setShowMSGID("");
+        setShowEdit(false);
+        setShowReply(false);
+      }
+
+    } else {
+      setShowMSGID(id);
+      setShowEdit(false);
+      setShowReply(true);
+    }
+  }
+
+  const change2 = (id: string) => {
+    if (showMSGID === id) {
+      if (showReply === true) {
+        setShowMSGID(id);
+        setShowEdit(true);
+        setShowReply(false);
+      } else {
+        setShowMSGID("");
+        setShowEdit(false);
+        setShowReply(false);
+      }
+    } else {
+      setShowMSGID(id);
+      setShowEdit(true);
+      setShowReply(false);
+    }
+  }
 
   return (
     <div className="MessageField">
@@ -128,7 +145,7 @@ export default function Message() {
 
               <IconButton
                 sx={{ float: "right" }}
-                onClick={() => (setShowReply(!showReply), setShowEdit(false))}
+                onClick={() => change1(value.id)}
               >
                 <ReplyIcon />
               </ IconButton>
@@ -143,7 +160,7 @@ export default function Message() {
                       <div>
                         <IconButton
                           sx={{ float: "right" }}
-                          onClick={() => (setShowEdit(!showEdit), setShowReply(false))}
+                          onClick={() => change2(value.id)}
                         >
                           <EditIcon />
                         </ IconButton>
@@ -172,40 +189,70 @@ export default function Message() {
                               })()}
                             </div>
                             <div>
-                              <div className="Message">
-                                <span>
-                                  {value.text?.split('\n').map((t: any, key: number) => (
-                                    <span key={key}>{t}<br /></span>
-                                  ))}
+                            {(() => {
+                                if (!(showEdit===true && showMSGID === value.id)) {/////////////////////////////////////直す！！！！////////////////////////////////////////
+                                  return (
+                                    <div className="Message">
+                                  <span>
+                                    {value.text?.split('\n').map((t: any, key: number) => (
+                                      <span key={key}>{t}<br /></span>
+                                    ))}
+                                  </span>
+                                </div>
+                                  );
+                                }
+                              })()}
 
-                                </span>
-                              </div>
+                              {/* {showEdit ? (<></>) : 
+                              
+                              (
+                                <div className="Message">
+                                  <span>
+                                    {value.text?.split('\n').map((t: any, key: number) => (
+                                      <span key={key}>{t}<br /></span>
+                                    ))}
+                                  </span>
+                                </div>
+                              )} */}
+
                             </div>
                           </div>
                         </div>
 
                         <div>
-                          {showEdit ? (
-                            <div>
-                              <br />
-                              <SendBox msg_id={value.id} text={value.text} type="Edit" />
-                            </div>
-                          ) : (
-                            <div></div>
-                          )}
-                          {showReply ? (
-                            <div>
-                              <br /><SendBox reply_to_id={value.id} user_id={id} text={value.text} type="Reply" />
-                            </div>
-                          ) : (<></>)
-                          }
+                          {(() => {
+                            if (showMSGID === value.id) {
+                              return (
+                                <div>
+
+                                  {showEdit ? (<div>
+                                    <br />
+                                    <SendBox msg_id={value.id} original_text={value.text} type="Edit" />
+                                  </div>)
+                                    : (<></>)
+                                  }
+
+                                  {showReply ? (<div>
+                                    <br />
+                                    <SendBox reply_to_id={value.id} user_id={id} text={value.text} type="Reply" />
+                                  </div>)
+                                    : (<></>)
+                                  }
+
+                                </div>
+                              );
+                            }
+                          })()}
                         </div>
 
                       </div>
                     );
 
-                    ////ここから他人の画面////
+                    ////ここまで自分の画面////
+
                   } else {
+
+                    ////ここから他人の画面////
                     return (
                       <div>
                         <div className="MessageBody">
@@ -235,17 +282,25 @@ export default function Message() {
                             </div>
                           </div>
                         </div>
-                        <div>{showReply ? (
-                          <div>
-                            <br />
-                            <SendBox reply_to_id={value.id} user_id={id} text={value.text} type="Reply" />
-                          </div>
-                        ) : (<></>)}
+                        <div>
+
+
+                          {(() => {
+                            if (showMSGID === value.id) {
+                              return (
+                                <div>
+                                  <br />
+                                  <SendBox reply_to_id={value.id} user_id={id} text={value.text} type="Reply" />
+                                </div>
+                              );
+                            }
+                          })()}
+
                         </div>
                       </div>
                     )
                   }
-
+                  ////ここまで他人の画面////
 
                 })()
               }
@@ -283,7 +338,7 @@ const SendBox = (props: any) => {
   //state定義
   const [values, setValues] = useState(
     {
-      message: "",
+      message: props.original_text,
       isSubmitted: false
     }
   );
@@ -311,17 +366,39 @@ const SendBox = (props: any) => {
   }
 
   const handleReply = async (event: any) => {
+    // console.log("text: " + values.message);
     try {
       const response = await axios.post(baseURL + '/reply', {
         reply_to_id: props.reply_to_id,
         user_id: props.user_id,
         text: values.message
       });
-      // console.log("msg_id: " + msg_id);
+      console.log("text: " + values.message);
       setValues({ message: "", isSubmitted: true });
       setFlag(true);
     } catch (error: any) {
       console.error("Failed to send message:" + error);
+    }
+  }
+
+  const checkTextArea = (e: any) => { //改行を含めない場合
+    if (e.type === undefined){
+      return 
+    }else {
+      const newText = e.replace(/\n/g, "")
+      return newText.length > 500;
+    }
+  }
+
+  const disable = (e: any) => {
+    if (e) {
+      if (e?.length > 500){
+        return true
+      } else {
+        return false
+      }
+    } else {
+      return true
     }
   }
 
@@ -346,8 +423,7 @@ const SendBox = (props: any) => {
                   label="メッセージを編集する"
                   fullWidth
                   multiline
-                  rows={3}
-                  // placeholder=""
+                  minRows={2}
                   // variant="filled"
                   size="small"
                   margin="dense"
@@ -355,18 +431,21 @@ const SendBox = (props: any) => {
                   InputLabelProps={{ style: textlabelStyles }}
                   value={values.message}
                   onChange={handleChange}
+                  error={values.message.length > 500}
+                  helperText={values.message.length > 500 && ("500字以内で入力してください")}
                 />
                 <Button
                   // variant="contained"
                   size="large"
                   endIcon={<EditIcon />}
-                  disabled={(values.message) ? false : true}
+                  disabled={disable(values.message)}
                   onClick={handleEdit}
                 >
                 </Button>
+                <div>{values.message.length}/500</div>
               </div>
             );
-          } else {
+          } else if (props.type === "Reply") {
             return (
               <div>
                 <TextField
@@ -375,8 +454,7 @@ const SendBox = (props: any) => {
                   label="返信する"
                   fullWidth
                   multiline
-                  rows={3}
-                  // placeholder=""
+                  minRows={2}
                   // variant="filled"
                   size="small"
                   margin="dense"
@@ -384,21 +462,23 @@ const SendBox = (props: any) => {
                   InputLabelProps={{ style: textlabelStyles }}
                   value={values.message}
                   onChange={handleChange}
+                  error={values.message?.length > 500}
+                  helperText={values.message?.length > 500 && ("500字以内で入力してください")}
                 />
                 <Button
                   // variant="contained"
                   size="large"
                   endIcon={<ReplyIcon />}
-                  disabled={(values.message) ? false : true}
+                  disabled={disable(values.message)}
                   onClick={handleReply}
                 >
                 </Button>
+                <div>{values.message?.length}/500</div>
+
               </div>
             )
           }
         })()}
-
-
 
       </div>
     </div>

@@ -3,11 +3,11 @@ import { UserContext } from "../context/UserContext";
 import { baseURL } from "../App";
 import { useSearchParams } from "react-router-dom";
 import defaultIcon from "../images/defaultIcon.jpeg";
-import { ref } from "firebase/storage";
-import { storage } from "../firebase";
-import { getDownloadURL } from "firebase/storage";
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
 import ReplyIcon from '@mui/icons-material/Reply';
-import { IconButton, dividerClasses } from "@mui/material";
+import { IconButton } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import TextField from '@mui/material/TextField';
@@ -27,18 +27,31 @@ interface channel {
   updated_at: string
 }
 
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 500,
+  bgcolor: 'background.paper',
+  borderRadius: '30px',
+  boxShadow: 24,
+  p: 4,
+};
 
 export default function MessageField() {
-  const [messages, setMessages] = useState([{ message: '', }]);
+  const [messages, setMessages] = useState([{ message: '', IconURL: defaultIcon, }]);
   const [flag, setFlag] = useState(false);
   const [searchParams] = useSearchParams();
   const { id } = useContext(UserContext);
   const [showEdit, setShowEdit] = useState(false);
   const [showReply, setShowReply] = useState(false);
   const [showMSGID, setShowMSGID] = useState("");
-
-  let channel_id = searchParams.get("channel_id");
-  let IconURL = defaultIcon;
+  const [open, setOpen] = useState(false);
+  const [show, setShow] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  let channel_id = searchParams.get("channel-id");
 
   const convertToJapanTime = (dateString: string) => {
     const receivedDate = new Date(dateString);
@@ -53,26 +66,6 @@ export default function MessageField() {
     setFlag(false);
   }, [channel_id, flag])
 
-  const IconHandler = (icon: string) => {
-    if (icon) {
-      try {
-        const gsReference = ref(storage, "gs://term3-shun-kondo.appspot.com/image/" + icon);
-        getDownloadURL(gsReference)
-          .then((url) => {
-            IconURL = url;
-          })
-          .catch((error) => {
-            console.log("アイコンの取得に失敗しました", error);
-          });
-      } catch (error) {
-        console.log("アイコンの取得に失敗しました", error);
-      }
-    } else {
-    }
-    return (
-      <img style={{ width: 36, height: 36 }} src={IconURL} alt="UserIcon" />
-    )
-  };
 
   const fetchMessages = async () => {
     try {
@@ -168,12 +161,54 @@ export default function MessageField() {
                         <IconButton
                           sx={{ float: "right" }}
                           onClick={() => deleteMessage(value.id)}
+                          // onClick={handleOpen}
                         >
                           <DeleteIcon />
                         </ IconButton>
 
+
+                        {/* {showMSGID === value.id ?
+                          (<Modal
+                            open={open}
+                            onClose={handleClose}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                          >
+                            <Box sx={style}>
+                              <Typography id="modal-modal-title" >
+                                <div>
+                                  <div className="MessageContent">
+                                    <div className="MessageBody">
+                                      <div className="Message">
+                                        <span>
+                                          {value.text?.split('\n').map((t: any, key: number) => (
+                                            <span key={key}>{t}<br /></span>
+                                          ))}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div>
+                                    本当に削除しますか？
+                                  </div>
+                                </div>
+                              </Typography>
+                            </Box>
+                          </Modal>) : (<></>
+                          )
+                        } */}
+
+
+
                         <div className="MessageBody">
-                          <div className="SenderIcon">{IconHandler(value.icon)}</div>
+                          <div className="SenderIcon">
+                            {value.icon ? (
+                              <img style={{ width: 33, height: 33, borderRadius: 3 }} src={value.icon} alt="UserIcon" />
+                            ) : (
+                              <img style={{ width: 33, height: 33, borderRadius: 3 }} src={defaultIcon} alt="UserIcon" />
+                            )}
+                          </div>
                           <div>
                             <div className="SenderInfo">
                               <div className="SenderName">{value.name}</div>
@@ -189,7 +224,23 @@ export default function MessageField() {
                               })()}
                             </div>
                             <div>
-                              {showEdit ? (<></>) : (
+                              {(() => {
+                                if (!(showEdit === true && showMSGID === value.id)) {/////////////////////////////////////直す！！！！////////////////////////////////////////
+                                  return (
+                                    <div className="Message">
+                                      <span>
+                                        {value.text?.split('\n').map((t: any, key: number) => (
+                                          <span key={key}>{t}<br /></span>
+                                        ))}
+                                      </span>
+                                    </div>
+                                  );
+                                }
+                              })()}
+
+                              {/* {showEdit ? (<></>) : 
+                              
+                              (
                                 <div className="Message">
                                   <span>
                                     {value.text?.split('\n').map((t: any, key: number) => (
@@ -197,7 +248,7 @@ export default function MessageField() {
                                     ))}
                                   </span>
                                 </div>
-                              )}
+                              )} */}
 
                             </div>
                           </div>
@@ -240,7 +291,12 @@ export default function MessageField() {
                     return (
                       <div>
                         <div className="MessageBody">
-                          <div className="SenderIcon">{IconHandler(value.icon)}</div>
+                          <div className="SenderIcon">
+                            {value.icon ? (
+                              <img style={{ width: 33, height: 33, borderRadius: 3 }} src={value.icon} alt="UserIcon" />
+                            ) : (
+                              <img style={{ width: 33, height: 33, borderRadius: 3 }} src={defaultIcon} alt="UserIcon" />
+                            )}                          </div>
                           <div>
                             <div className="SenderInfo">
                               <div className="SenderName">{value.name}</div>
@@ -350,17 +406,39 @@ const SendBox = (props: any) => {
   }
 
   const handleReply = async (event: any) => {
+    // console.log("text: " + values.message);
     try {
       const response = await axios.post(baseURL + '/reply', {
         reply_to_id: props.reply_to_id,
         user_id: props.user_id,
         text: values.message
       });
-      // console.log("msg_id: " + msg_id);
+      console.log("text: " + values.message);
       setValues({ message: "", isSubmitted: true });
       setFlag(true);
     } catch (error: any) {
       console.error("Failed to send message:" + error);
+    }
+  }
+
+  const checkTextArea = (e: any) => { //改行を含めない場合
+    if (e.type === undefined) {
+      return
+    } else {
+      const newText = e.replace(/\n/g, "")
+      return newText.length > 500;
+    }
+  }
+
+  const disable = (e: any) => {
+    if (e) {
+      if (e?.length > 500) {
+        return true
+      } else {
+        return false
+      }
+    } else {
+      return true
     }
   }
 
@@ -385,8 +463,7 @@ const SendBox = (props: any) => {
                   label="メッセージを編集する"
                   fullWidth
                   multiline
-                  minRows={3}
-                  // placeholder=""
+                  minRows={2}
                   // variant="filled"
                   size="small"
                   margin="dense"
@@ -394,19 +471,21 @@ const SendBox = (props: any) => {
                   InputLabelProps={{ style: textlabelStyles }}
                   value={values.message}
                   onChange={handleChange}
-                  placeholder={props.original_text}
+                  error={values.message.length > 500}
+                  helperText={values.message.length > 500 && ("500字以内で入力してください")}
                 />
                 <Button
                   // variant="contained"
                   size="large"
                   endIcon={<EditIcon />}
-                  disabled={(values.message) ? false : true}
+                  disabled={disable(values.message)}
                   onClick={handleEdit}
                 >
                 </Button>
+                <div>{values.message.length}/500</div>
               </div>
             );
-          } else {
+          } else if (props.type === "Reply") {
             return (
               <div>
                 <TextField
@@ -415,8 +494,7 @@ const SendBox = (props: any) => {
                   label="返信する"
                   fullWidth
                   multiline
-                  rows={3}
-                  // placeholder=""
+                  minRows={2}
                   // variant="filled"
                   size="small"
                   margin="dense"
@@ -424,15 +502,19 @@ const SendBox = (props: any) => {
                   InputLabelProps={{ style: textlabelStyles }}
                   value={values.message}
                   onChange={handleChange}
+                  error={values.message?.length > 500}
+                  helperText={values.message?.length > 500 && ("500字以内で入力してください")}
                 />
                 <Button
                   // variant="contained"
                   size="large"
                   endIcon={<ReplyIcon />}
-                  disabled={(values.message) ? false : true}
+                  disabled={disable(values.message)}
                   onClick={handleReply}
                 >
                 </Button>
+                <div>{values.message?.length}/500</div>
+
               </div>
             )
           }

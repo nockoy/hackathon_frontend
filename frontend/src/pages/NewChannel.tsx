@@ -57,8 +57,8 @@ const NewChannel = () => {
         user_id: id,
         channel_id: res1.data.id
       });
-      // navigation("/?channel_id=" + channel);
-      navigation("/?channel_id=" + res1.data.id);
+      // navigation("/?channel-id=" + channel);
+      navigation("/?channel-id=" + res1.data.id);
     } catch (error: any) {
       setError(`Failed to create new channel: ${error.message}`);
     }
@@ -108,7 +108,7 @@ const NewChannel = () => {
 
           <button onClick={handleSubmit}/*disabled={disable}*/>登録する</button>
           <div>
-            <Link to={"/?channel_id=" + channel}>ホームに戻る</Link>
+            <Link to={"/?channel-id=" + channel}>ホームに戻る</Link>
           </div>
         </form>
       </div>
