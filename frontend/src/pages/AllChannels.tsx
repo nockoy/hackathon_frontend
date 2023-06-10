@@ -29,7 +29,7 @@ export default function Channels() {
   const fetchData = async () => {
     try {
       const response = await axios.get(baseURL + '/channel/join?user_id=' + id);
-      const response2 = await axios.get(baseURL + '/channel/notjoin?user_id=' + id);
+      const response2 = await axios.get(baseURL + '/channel/other?user_id=' + id);
 
       setUserChannels(response.data);
       setOtherChannels(response2.data);

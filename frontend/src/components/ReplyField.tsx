@@ -37,7 +37,7 @@ export default function ReplyField() {
   const [showReply, setShowReply] = useState(false);
   const [showMSGID, setShowMSGID] = useState("");
 
-  let channel_id = searchParams.get("channel-id");
+  let channel_id = searchParams.get("channel_id");
   let IconURL = defaultIcon;
 
   const convertToJapanTime = (dateString: string) => {

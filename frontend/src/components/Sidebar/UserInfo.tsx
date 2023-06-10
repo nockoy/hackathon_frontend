@@ -1,10 +1,7 @@
-import { getDownloadURL } from "firebase/storage";
 import { Link, useSearchParams } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import { useAuthContext } from '../../context/AuthContext';
 import { UserContext } from '../../context/UserContext';
-import { ref } from "firebase/storage";
-import { storage } from "../../firebase";
 import defaultIcon from "../../images/defaultIcon.jpeg";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -35,7 +32,6 @@ const style = {
 function UserInfo() {
   const { user } = useAuthContext();
   const { id, name, icon, channel, setUser } = useContext(UserContext);
-  const [image, setImage] = useState(defaultIcon);
   const [open, setOpen] = useState(false);
   const [show, setShow] = useState(false);
   const [flag, setFlag] = useState(false);
@@ -43,16 +39,8 @@ function UserInfo() {
   let channel_id = searchParams.get("channel_id");
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [values, setValues] = useState({ message: "", isSubmitted: false });
-  const theme = createTheme({
-    typography: {
-      fontFamily: "inherit",
-      button: {
-        textTransform: "none",
-        fontFamily: "inherit"
-      }
-    }
-  });
+  const [values, setValues] = useState({ name: "", isSubmitted: false });
+
   const textfieldStyles = {
     backgroundColor: "#ffffff",
     fontFamily: "inherit"
@@ -74,13 +62,13 @@ function UserInfo() {
   const handleSubmit = async () => {
     setFlag(true);
     try {
-      const response = await axios.put(baseURL + '/user2', {
+      await axios.put(baseURL + '/user2', {
         id: id,
-        name: values.message
+        name: values.name
       });
-      setValues({ message: "", isSubmitted: true });
+      setValues({ name: "", isSubmitted: true });
       setFlag(true);
-      setUser(id, values.message, icon, channel);
+      setUser(id, values.name, icon, channel);
     } catch (error: any) {
       console.error("Failed to update username:" + error);
     }
@@ -92,7 +80,7 @@ function UserInfo() {
         {icon ? (
           <img style={{ width: 100, height: 100, borderRadius: 9 }} src={icon} alt="UserIcon" />
         ) : (
-          <img style={{ width: 100, height: 100, borderRadius: 9 }} src={image} alt="UserIcon" />
+          <img style={{ width: 100, height: 100, borderRadius: 9 }} src={defaultIcon} alt="UserIcon" />
         )}
 
         <p>{name}</p>
@@ -132,21 +120,23 @@ function UserInfo() {
                         >
                           <div>
                             <TextField
-                              name="message"
-                              id="standard-basic"
+                              name="name"
+                              id="name"
                               label="新しい名前"
                               variant="standard"
                               placeholder="50文字以内で入力"
                               InputProps={{ style: textfieldStyles }}
                               InputLabelProps={{ style: textlabelStyles }}
-                              value={values.message}
+                              value={values.name}
                               onChange={handleChange}
+                              error={values.name.length > 50}
+                              helperText={values.name.length > 50 && ("50字以内で入力してください")}
                             />
                             <Button
                               // variant="contained"
                               size="large"
                               endIcon={<SendIcon />}
-                              disabled={(values.message) ? false : true}
+                              disabled={(values.name) ? false : true}
                               onClick={handleSubmit}
                             >
                             </Button>
@@ -174,7 +164,7 @@ function UserInfo() {
                   <div className="profileCntent">
                     <div className="profileHeadline">アイコン</div>
                     <div className="profileItem">
-                      {icon}
+                      {/* {icon} */}
                     </div>
                     <Link to={"/image"}>
                       アイコンを変更する

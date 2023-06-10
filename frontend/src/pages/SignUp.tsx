@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { fireAuth } from '../firebase';
@@ -6,60 +6,59 @@ import { baseURL } from "../App";
 import { UserContext } from "../context/UserContext";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import axios from "axios";
 
-
-interface Channel {
-  c_id: string;
-  name: string;
-  description: string;
-  created_at: string;
-  updated_at: string;
-}
-
 const SignUp = () => {
-  //const [loginuser, setLoginuser] = useContext(UserContext)
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [passwordType, setPasswordType] = useState("password");
   const [error, setError] = useState("");
-  //const [disable, setDisable] = useState(!name || !email || !password);
   const navigation = useNavigate();
   const { setUser } = useContext(UserContext);
+  let disabled = false;
   let channel_id = "";
+  const regexpEmail = /^[a-zA-Z0-9_+-]+(.[a-zA-Z0-9_+-]+)*@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/;
 
+  const textfieldStyles = {
+    backgroundColor: "#ffffff",
+    fontFamily: "inherit"
+  };
 
-  const handleSubmit = async (event: any) => {
-    event.preventDefault();
-    //setDisable(true);
-    if (!name) {
-      alert("Please enter name");
-      return;
-    }
-    if (name.length > 50) {
-      alert("Please enter a name shorter than 50 characters");
-      return;
-    }
-    if (!email) {
-      alert("Please enter email");
-      return;
-    }
+  const textlabelStyles = {
+    fontFamily: "inherit"
+  };
 
+  const [values, setValues] = useState(
+    {
+      name: "",
+      email: "",
+      password: ""
+    }
+  );
+
+  const handleChange = (e: any) => {
+    const target = e.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    setValues({ ...values, [name]: value });
+  };
+
+  const handleSubmit = async () => {
+    disabled = true;
     try {
       const response = await axios.post(baseURL + '/user', {
-        name: name,
-        email: email
+        name: values.name,
+        email: values.email
       });
       const response2 = await axios.get(baseURL + '/channel/join?user_id=' + response.data.id);
 
-      await createUserWithEmailAndPassword(fireAuth, email, password);
+      await createUserWithEmailAndPassword(fireAuth, values.email, values.password);
 
       channel_id = response2.data[0].id;
 
       setUser(response.data.id, response.data.name, response.data.icon, channel_id);
 
-      navigation('/?channel-id=' + channel_id);
+      navigation('/?channel_id=' + channel_id);
     } catch (error: any) {
       setError(`Failed to sign up: ${error.message} \n登録できているかもしれません`);
     }
@@ -70,33 +69,67 @@ const SignUp = () => {
       <div className='auth2'>
         <h1>Slack-like App</h1>
         {error && <p style={{ color: 'red' }}>{error}</p>}
-        <form className="form" onSubmit={handleSubmit}>
+        <form className="form">
 
-          <label>ユーザーネーム</label>
-          <input
+          <TextField
             name="name"
-            type="name"
-            placeholder="Username"
-            onChange={(event) => setName(event.target.value)}
+            id="name"
+            label="Username"
+            fullWidth
+            variant="filled"
+            size="small"
+            margin="dense"
+            InputProps={{ style: textfieldStyles }}
+            InputLabelProps={{ style: textlabelStyles }}
+            value={values.name}
+            onChange={handleChange}
+            error={values.name.length > 50}
+            helperText={values.name.length > 50 && ("50字以内で入力してください")}
           />
-
-
-          <label>メールアドレス</label>
-          <input
+          <TextField
             name="email"
-            type="email"
-            placeholder="Email"
-            onChange={(event) => setEmail(event.target.value)}
+            id="email"
+            label="Email"
+            fullWidth
+            variant="filled"
+            size="small"
+            margin="dense"
+            InputProps={{ style: textfieldStyles }}
+            InputLabelProps={{ style: textlabelStyles }}
+            value={values.email}
+            onChange={handleChange}
+            error={((regexpEmail.test(values.email) && (values.email)) || !(values.email)) ? false : true}
+            helperText={values.email.length > 50 && ("50字以内で入力してください")}
+          />
+          <TextField
+            name="password"
+            id="password"
+            label="Password"
+            type={passwordType}
+            autoComplete="new-password"
+            fullWidth
+            variant="filled"
+            size="small"
+            margin="dense"
+            InputProps={{ style: textfieldStyles }}
+            InputLabelProps={{ style: textlabelStyles }}
+            value={values.password}
+            onChange={handleChange}
+            error={values.password.length > 0 && values.password.length < 6}
+            helperText={values.password.length > 0 && values.password.length < 6 && ("6字以上で入力してください")}
           />
 
-          <label>パスワード</label>
-          <input
-            type={passwordType}
-            placeholder={"Password"}
-            autoComplete="new-password"
-            required
-            onChange={(event) => setPassword(event.target.value)}
-          />
+          <Button
+            // variant="contained"
+            size="large"
+            disabled={(values.name && regexpEmail.test(values.email) && values.password.length > 5 && disabled === false) ? false : true}
+            onClick={handleSubmit}
+          >
+            <div>
+              登録する
+            </div>
+          </Button>
+
           {passwordType === "password" && (
             <VisibilityOffIcon
               onClick={() => setPasswordType("text")}
@@ -110,7 +143,7 @@ const SignUp = () => {
             />
           )}
 
-          <button /*disabled={disable}*/>登録する</button>
+          {/* <button>登録する</button> */}
           <div>
             アカウントをお持ちですか？
           </div>

@@ -70,7 +70,7 @@ const ImageUploader = () => {
 
 
     setTimeout(() => {
-      window.location.href = "/?channel-id=" + channel;
+      window.location.href = "/?channel_id=" + channel;
     }, 1 * 1000);
 
   }
@@ -121,7 +121,7 @@ const ImageUploader = () => {
                 />
               </Button>
               <br />
-              <Link to={"/?channel-id=" + channel}>
+              <Link to={"/?channel_id=" + channel}>
                 ホームに戻る
               </Link>
             </div>

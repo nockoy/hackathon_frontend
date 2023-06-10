@@ -50,7 +50,7 @@ const SendBox = () => {
 
     try {
       const response = await axios.post(baseURL + '/message', {
-        channel_id: searchParams.get("channel-id"),
+        channel_id: searchParams.get("channel_id"),
         user_id: id,
         text: values.message
       });
