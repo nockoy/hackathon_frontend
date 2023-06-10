@@ -35,22 +35,22 @@ const ImageUploader = () => {
           setLoading(false);
           setUploaded(true);
 
-          console.log("file.name: " + file.name)
+          // console.log("file.name: " + file.name)
 
           const gsReference = ref(storage, "gs://term3-shun-kondo.appspot.com/image/" + file.name);
           getDownloadURL(gsReference)
             .then(async (url) => {
               IconURL = url;
-              console.log("IconURL: " + IconURL);
+              // console.log("IconURL: " + IconURL);
 
               try {
                 const response = await axios.put(baseURL + '/user', {
                   id: id,
                   icon: IconURL,
                 });
-                console.log(IconURL);
+                // console.log(IconURL);
                 setUser(id, name, IconURL, channel);
-                console.log("icon" + icon);
+                // console.log("icon" + icon);
               } catch (error) {
                 console.log(error);
               }

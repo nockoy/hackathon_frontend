@@ -428,7 +428,7 @@ const SendBox = (props: any) => {
         user_id: props.user_id,
         text: values.message
       });
-      console.log("text: " + values.message);
+      // console.log("text: " + values.message);
       setValues({ message: "", isSubmitted: true });
       setFlag(true);
     } catch (error: any) {

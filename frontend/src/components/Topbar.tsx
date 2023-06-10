@@ -14,6 +14,7 @@ function Topbar() {
           placeholder="メッセージや返信を検索してみよう"
           size="small"
           margin="dense"
+          disabled={true}
         />
       </div>
     </div>
