@@ -1,28 +1,76 @@
 import { useState, useEffect, useContext } from "react";
 import { useSearchParams } from "react-router-dom";
+import { storage } from "../firebase"
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { baseURL } from '../App';
 import { UserContext } from "../context/UserContext";
 import TextField from '@mui/material/TextField';
 import SendIcon from '@mui/icons-material/Send';
 import Button from '@mui/material/Button';
 import { createTheme } from '@mui/material/styles';
+import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import axios from "axios";
+
 
 const SendBox = () => {
   const [flag, setFlag] = useState(false);
-  const { id } = useContext(UserContext);
   const [searchParams] = useSearchParams();
 
-  //見た目の設定
-  const theme = createTheme({
-    typography: {
-      fontFamily: "inherit",
-      button: {
-        textTransform: "none",
-        fontFamily: "inherit"
-      }
+  const [loading, setLoading] = useState(false);
+  const [isUploaded, setUploaded] = useState(false);
+  const { id, name, icon, channel, setUser } = useContext(UserContext);
+
+  const OnFileUploadToFirebase = async (e: any) => {
+    const file = e.target.files[0];
+    const storageRef = ref(storage, "image/" + new Date().toISOString() + file.name)
+    const pathReference = ref(storage, "images/" +  new Date().toISOString() + file.name);
+    const uploadImage = uploadBytesResumable(storageRef, file);
+    let IconURL = "";
+
+    try {
+      setLoading(true);
+
+      uploadImage.on(
+        "state_changed",
+        (snapshot) => { },
+        (err) => {
+          console.log(err);
+          setLoading(false);
+        },
+        async () => {
+          setLoading(false);
+          setUploaded(true);
+
+          console.log("file.name: " +  new Date().toISOString() + file.name)
+
+          const gsReference = ref(storage, "gs://term3-shun-kondo.appspot.com/image/" + new Date().toISOString() + file.name);
+          getDownloadURL(gsReference)
+            .then(async (url) => {
+              IconURL = url;
+              console.log("IconURL: " + IconURL);
+
+              try {
+                const response = await axios.put(baseURL + '/user', {
+                  id: id,
+                  icon: IconURL,
+                });
+                console.log(IconURL);
+                console.log("icon" + icon);
+              } catch (error) {
+                console.log(error);
+              }
+            })
+            .catch((error) => {
+              console.log("画像の取得に失敗しました:", error);
+            });
+        }
+      );
+    } catch (error) {
+      console.log(error);
     }
-  });
+  };
+
+  
   const textfieldStyles = {
     backgroundColor: "#ffffff",
     fontFamily: "inherit"
@@ -91,9 +139,25 @@ const SendBox = () => {
     <div className="SendBox">
       <div className='TextBox'
         style={{
-          width: "60vw", /*テキストボックスの横幅*/
+          width: "70vw", /*テキストボックスの横幅*/
           display: "flex"
         }}>
+
+        {/* 画像挿入 */}
+        {/* <Button
+          // variant="contained"
+          size="large"
+          endIcon={<InsertPhotoIcon />}
+          sx={{ float: "left" }}
+        >
+          <input
+            className="imageUploadInput"
+            type="file"
+            accept=".png, .jpeg, .jpg"
+          onChange={OnFileUploadToFirebase}
+          />
+        </Button> */}
+
         <TextField
           name="message"
           id="outlined-textarea"
@@ -113,7 +177,8 @@ const SendBox = () => {
           helperText={values.message.length > 500 && ("500字以内で入力してください")}
         />
         <div className="SendSide">
-          <div className="LengthCount">{values.message.length}/500</div>
+          <div className="LengthCount">({values.message.length}/500)</div>
+
           <Button
             // variant="contained"
             size="large"
