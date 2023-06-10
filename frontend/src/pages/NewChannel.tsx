@@ -90,7 +90,7 @@ const NewChannel = () => {
           <TextField
             name="name"
             id="outlined-textarea"
-            label="チャンネル名"
+            // label="チャンネル名"
             fullWidth
             placeholder="Channel名を入力してください"
             // variant="filled"
@@ -109,7 +109,7 @@ const NewChannel = () => {
           <TextField
             name="description"
             id="outlined-textarea"
-            label="Description"
+            // label="Description"
             fullWidth
             multiline
             rows={3}

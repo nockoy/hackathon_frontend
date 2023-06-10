@@ -15,7 +15,7 @@ export const Router = () => {
         <Routes>
           <Route path={`/`} element={<Mypage />} />
           <Route path={`/:channel_id`} element={<Mypage />} />
-          <Route path={`/reply/:message_id`} element={<Reply />} />
+          <Route path={`/reply`} element={<Reply />} />
           <Route path={`/signup`} element={<SignUp />} />
           <Route path={`/login`} element={<Login />} />
           <Route path={`/image`} element={<ImageUploader />} />
