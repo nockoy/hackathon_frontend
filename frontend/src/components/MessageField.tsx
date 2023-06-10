@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import { baseURL } from "../App";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import defaultIcon from "../images/defaultIcon.jpeg";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -9,6 +9,7 @@ import Modal from '@mui/material/Modal';
 import ReplyIcon from '@mui/icons-material/Reply';
 import { IconButton } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
+import ForumIcon from '@mui/icons-material/Forum';
 import DeleteIcon from '@mui/icons-material/Delete';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -39,10 +40,11 @@ const style = {
   p: 4,
 };
 
+let reload = false;
+
 export default function MessageField() {
   const [messages, setMessages] = useState([{ message: '', IconURL: defaultIcon, }]);
   const [flag, setFlag] = useState(false);
-  const [searchParams] = useSearchParams();
   const { id } = useContext(UserContext);
   const [showEdit, setShowEdit] = useState(false);
   const [showReply, setShowReply] = useState(false);
@@ -50,6 +52,8 @@ export default function MessageField() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   let channel_id = searchParams.get("channel_id");
 
   const convertToJapanTime = (dateString: string) => {
@@ -63,7 +67,15 @@ export default function MessageField() {
   useEffect(() => {
     fetchMessages();
     setFlag(false);
-  }, [channel_id, flag])
+    reload = false;
+    setShowEdit(false);
+    setShowReply(false);
+  }, [channel_id, flag, reload])
+
+  // if (reload === true) {
+  //   setShowEdit(false);
+  //   setShowReply(false);
+  // }
 
 
   const fetchMessages = async () => {
@@ -134,6 +146,13 @@ export default function MessageField() {
           <div>
             <div className="MessageContent" key={key} >
 
+
+              <IconButton
+                sx={{ float: "right" }}
+                onClick={() => navigate("/reply/?message_id=" + value.id)}
+              >
+                <ForumIcon />
+              </ IconButton>
 
               <IconButton
                 sx={{ float: "right" }}
@@ -250,7 +269,7 @@ export default function MessageField() {
 
                         <div>
                           {(() => {
-                            if (showMSGID === value.id) {
+                            if (showMSGID === value.id && reload === false) {
                               return (
                                 <div>
 
@@ -395,6 +414,7 @@ const SendBox = (props: any) => {
       // console.log("msg_id: " + msg_id);
       setValues({ message: "", isSubmitted: true });
       setFlag(true);
+      reload = true;
     } catch (error: any) {
       console.error("Failed to send message:" + error);
     }

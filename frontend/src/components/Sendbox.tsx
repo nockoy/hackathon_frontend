@@ -56,6 +56,7 @@ const SendBox = () => {
       });
       setValues({ message: "", isSubmitted: true });
       setFlag(true);
+      window.location.reload()
     } catch (error: any) {
       console.error("Failed to send message:" + error);
     }
