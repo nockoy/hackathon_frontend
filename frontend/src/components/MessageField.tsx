@@ -489,6 +489,7 @@ const SendBox = (props: any) => {
                   error={values.message.length > 500}
                   helperText={values.message.length > 500 && ("500字以内で入力してください")}
                 />
+
                 <Button
                   // variant="contained"
                   size="large"
