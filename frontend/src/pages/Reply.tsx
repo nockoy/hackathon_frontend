@@ -24,7 +24,7 @@ export default function Reply() {
   const [userChannels, setUserChannels] = useState<Channel[]>([]);
   const { id } = useContext(UserContext);
   const [searchParams] = useSearchParams();
-  let channel_id = searchParams.get("message");
+  let message_id = searchParams.get("message_id");
 
 
   useEffect(() => {

@@ -33,7 +33,7 @@ function ChannelList() {
   };
 
   const onClickhandler = (value:any) => {
-    navigate("/?channel-id=" + value.id);
+    navigate("/?channel_id=" + value.id);
   }
 
   return (

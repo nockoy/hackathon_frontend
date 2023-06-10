@@ -10,7 +10,7 @@ const NewChannel = () => {
   const navigation = useNavigate();
   const { id, channel } = useContext(UserContext);
   const [values, setValues] = useState({ name: "", description: "", isSubmitted: false });
-
+  const [channelList, setChannelList] = useState([{ channel_name: '' }]);
 
   const textfieldStyles = {
     backgroundColor: "#ffffff",
@@ -27,6 +27,21 @@ const NewChannel = () => {
     const name = target.name;
     setValues({ ...values, [name]: value });
   };
+
+  //時間があったら
+  // const fetchChannelNames = async () => {
+  //   try {
+  //     //全てのチャンネル名を取得
+  //     ////const res = await fetch(baseURL + "/message?channel_id=" + channel_id);
+  //     if (!res.ok) {
+  //       throw Error(`Failed to fetch messages: ${res.status}`);
+  //     }
+  //     const channelNames = await res.json();
+  //     setChannelList(channelNames);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
@@ -57,8 +72,8 @@ const NewChannel = () => {
         user_id: id,
         channel_id: res1.data.id
       });
-      // navigation("/?channel-id=" + channel);
-      navigation("/?channel-id=" + res1.data.id);
+      // navigation("/?channel_id=" + channel);
+      navigation("/?channel_id=" + res1.data.id);
     } catch (error: any) {
       setError(`Failed to create new channel: ${error.message}`);
     }
@@ -85,6 +100,8 @@ const NewChannel = () => {
             InputLabelProps={{ style: textlabelStyles }}
             value={values.name}
             onChange={handleChange}
+            error={values.name.length > 20}
+            helperText={values.name.length > 20 && ("20字以内で入力してください")}
           />
 
 
@@ -104,11 +121,13 @@ const NewChannel = () => {
             InputLabelProps={{ style: textlabelStyles }}
             value={values.description}
             onChange={handleChange}
+            error={values.description.length > 100}
+            helperText={values.description.length > 100 && ("100字以内で入力してください")}
           />
 
           <button onClick={handleSubmit}/*disabled={disable}*/>登録する</button>
           <div>
-            <Link to={"/?channel-id=" + channel}>ホームに戻る</Link>
+            <Link to={"/?channel_id=" + channel}>ホームに戻る</Link>
           </div>
         </form>
       </div>

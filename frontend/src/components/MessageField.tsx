@@ -48,10 +48,9 @@ export default function MessageField() {
   const [showReply, setShowReply] = useState(false);
   const [showMSGID, setShowMSGID] = useState("");
   const [open, setOpen] = useState(false);
-  const [show, setShow] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  let channel_id = searchParams.get("channel-id");
+  let channel_id = searchParams.get("channel_id");
 
   const convertToJapanTime = (dateString: string) => {
     const receivedDate = new Date(dateString);
@@ -148,7 +147,6 @@ export default function MessageField() {
 
                   ////ここから自分の画面////
                   if (value.user_id === id) {
-                    //ここにuseStateを書く。if文の中に全部要素を入れる
                     return (
                       <div>
                         <IconButton
@@ -161,44 +159,40 @@ export default function MessageField() {
                         <IconButton
                           sx={{ float: "right" }}
                           onClick={() => deleteMessage(value.id)}
-                          // onClick={handleOpen}
+                        // onClick={handleOpen}
                         >
                           <DeleteIcon />
                         </ IconButton>
 
-
-                        {/* {showMSGID === value.id ?
-                          (<Modal
-                            open={open}
-                            onClose={handleClose}
-                            aria-labelledby="modal-modal-title"
-                            aria-describedby="modal-modal-description"
-                          >
-                            <Box sx={style}>
-                              <Typography id="modal-modal-title" >
-                                <div>
-                                  <div className="MessageContent">
-                                    <div className="MessageBody">
-                                      <div className="Message">
-                                        <span>
-                                          {value.text?.split('\n').map((t: any, key: number) => (
-                                            <span key={key}>{t}<br /></span>
-                                          ))}
-                                        </span>
-                                      </div>
+                        {/* <Modal
+                          open={open}
+                          onClose={handleClose}
+                          aria-labelledby="modal-modal-title"
+                          aria-describedby="modal-modal-description"
+                        >
+                          <Box sx={style}>
+                            <Typography id="modal-modal-title" >
+                              <div>
+                                <div className="MessageContent">
+                                  <div className="MessageBody">
+                                    <div className="Message">
+                                      <span>
+                                        {value.text?.split('\n').map((t: any, key: number) => (
+                                          <span key={key}>{t}<br /></span>
+                                        ))}
+                                      </span>
                                     </div>
                                   </div>
-
-                                  <div>
-                                    本当に削除しますか？
-                                  </div>
                                 </div>
-                              </Typography>
-                            </Box>
-                          </Modal>) : (<></>
-                          )
-                        } */}
 
+                                <div>
+                                  本当に削除しますか？
+                                </div>
+                              </div>
+                            </Typography>
+                          </Box>
+                        </Modal>
+ */}
 
 
                         <div className="MessageBody">
@@ -296,7 +290,8 @@ export default function MessageField() {
                               <img style={{ width: 33, height: 33, borderRadius: 3 }} src={value.icon} alt="UserIcon" />
                             ) : (
                               <img style={{ width: 33, height: 33, borderRadius: 3 }} src={defaultIcon} alt="UserIcon" />
-                            )}                          </div>
+                            )}
+                          </div>
                           <div>
                             <div className="SenderInfo">
                               <div className="SenderName">{value.name}</div>

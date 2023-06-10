@@ -15,7 +15,7 @@ const NotFound = () => {
             404 NotFound
           </h1>
         <h3>お探しのページは見つかりませんでした。</h3>
-        <button onClick={() => navigate("/?channel-id=" + channel)}>ホームに戻る</button>
+        <button onClick={() => navigate("/?channel_id=" + channel)}>ホームに戻る</button>
       </div>
     </div>
   );
