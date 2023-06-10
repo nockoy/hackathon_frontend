@@ -85,7 +85,6 @@ const ImageUploader = () => {
           {isUploaded ? (
             <div className="auth">
               <h2>アップロード完了しました！</h2>
-              <h2>1秒後にホームに戻ります!</h2>
             </div>
           ) : (
             <div className="outerBox">

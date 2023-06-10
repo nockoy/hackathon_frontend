@@ -4,6 +4,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { fireAuth } from '../firebase';
 import { baseURL } from "../App";
 import { UserContext } from "../context/UserContext";
+import defaultIcon from "../images/defaultIcon.jpeg";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import TextField from '@mui/material/TextField';
@@ -56,13 +57,14 @@ const SignUp = () => {
 
       channel_id = response2.data[0].id;
 
-      setUser(response.data.id, response.data.name, response.data.icon, channel_id);
+      setUser(response.data.id, response.data.name, defaultIcon, channel_id);
 
       navigation('/?channel_id=' + channel_id);
     } catch (error: any) {
-      setError(`Failed to sign up: ${error.message} \n登録できているかもしれません`);
+      setError(`Failed to sign up: ${error.message} `);
     }
   }
+  
 
   return (
     <div className="auth">

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { baseURL } from "../App";
 import { UserContext } from "../context/UserContext";
 import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import axios from "axios";
 
 const NewChannel = () => {
@@ -79,6 +80,30 @@ const NewChannel = () => {
     }
   }
 
+  const disableByName = (e: any) => {
+    if (e) {
+      if (e?.length > 20) {
+        return true
+      } else {
+        return false
+      }
+    } else {
+      return true
+    }
+  }
+
+  const disableByDescription = (e: any) => {
+    if (e) {
+      if (e?.length > 100) {
+        return true
+      } else {
+        return false
+      }
+    } else {
+      return true
+    }
+  }
+
   return (
     <div className="auth">
       <div className='auth2'>
@@ -113,7 +138,7 @@ const NewChannel = () => {
             fullWidth
             multiline
             rows={3}
-            placeholder="どのようなChannelですか？"
+            placeholder="どのようなChannelですか？（必須）"
             // variant="filled"
             size="small"
             margin="dense"
@@ -123,9 +148,19 @@ const NewChannel = () => {
             onChange={handleChange}
             error={values.description.length > 100}
             helperText={values.description.length > 100 && ("100字以内で入力してください")}
+            
           />
 
-          <button onClick={handleSubmit}/*disabled={disable}*/>登録する</button>
+          <Button
+            // variant="contained"
+            size="large"
+            disabled={disableByName(values.name) || disableByDescription(values.description)}
+            onClick={handleSubmit}
+          >
+            登録する
+          </Button>
+
+          {/* <button onClick={handleSubmit}>登録する</button> */}
           <div>
             <Link to={"/?channel_id=" + channel}>ホームに戻る</Link>
           </div>

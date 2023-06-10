@@ -495,9 +495,10 @@ const SendBox = (props: any) => {
                   endIcon={<EditIcon />}
                   disabled={disable(values.message)}
                   onClick={handleEdit}
+                  sx={{float:"right"}}
                 >
+                  ({values.message.length}/500)
                 </Button>
-                <div>{values.message.length}/500</div>
               </div>
             );
           } else if (props.type === "Reply") {
@@ -526,9 +527,10 @@ const SendBox = (props: any) => {
                   endIcon={<ReplyIcon />}
                   disabled={disable(values.message)}
                   onClick={handleReply}
+                  sx={{float:"right"}}
                 >
+                  ({values.message?.length}/500)
                 </Button>
-                <div>{values.message?.length}/500</div>
 
               </div>
             )
