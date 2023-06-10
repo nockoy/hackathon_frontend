@@ -189,16 +189,16 @@ export default function ReplyField() {
                               })()}
                             </div>
                             <div>
-                            {(() => {
-                                if (!(showEdit===true && showMSGID === value.id)) {/////////////////////////////////////直す！！！！////////////////////////////////////////
+                              {(() => {
+                                if (!(showEdit === true && showMSGID === value.id)) {/////////////////////////////////////直す！！！！////////////////////////////////////////
                                   return (
                                     <div className="Message">
-                                  <span>
-                                    {value.text?.split('\n').map((t: any, key: number) => (
-                                      <span key={key}>{t}<br /></span>
-                                    ))}
-                                  </span>
-                                </div>
+                                      <span>
+                                        {value.text?.split('\n').map((t: any, key: number) => (
+                                          <span key={key}>{t}<br /></span>
+                                        ))}
+                                      </span>
+                                    </div>
                                   );
                                 }
                               })()}
@@ -382,9 +382,9 @@ const SendBox = (props: any) => {
   }
 
   const checkTextArea = (e: any) => { //改行を含めない場合
-    if (e.type === undefined){
-      return 
-    }else {
+    if (e.type === undefined) {
+      return
+    } else {
       const newText = e.replace(/\n/g, "")
       return newText.length > 500;
     }
@@ -392,7 +392,7 @@ const SendBox = (props: any) => {
 
   const disable = (e: any) => {
     if (e) {
-      if (e?.length > 500){
+      if (e?.length > 500) {
         return true
       } else {
         return false
@@ -417,7 +417,7 @@ const SendBox = (props: any) => {
           if (props.type === "Edit") {
             return (
               <div>
-                <TextField
+                {/* <TextField
                   name="message"
                   id="outlined-textarea"
                   label="メッセージを編集する"
@@ -440,9 +440,10 @@ const SendBox = (props: any) => {
                   endIcon={<EditIcon />}
                   disabled={disable(values.message)}
                   onClick={handleEdit}
+                  sx={{float:"right"}}
                 >
-                </Button>
-                <div>{values.message.length}/500</div>
+                  ({values.message.length}/500)
+                </Button> */}
               </div>
             );
           } else if (props.type === "Reply") {
@@ -471,9 +472,11 @@ const SendBox = (props: any) => {
                   endIcon={<ReplyIcon />}
                   disabled={disable(values.message)}
                   onClick={handleReply}
+                  sx={{float:"right"}}
                 >
+                  ({values.message?.length}/500)
                 </Button>
-                <div>{values.message?.length}/500</div>
+
 
               </div>
             )
